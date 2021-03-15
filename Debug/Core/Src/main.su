@@ -1,0 +1,9 @@
+main.c:79:7:HAL_TIM_PeriodElapsedCallback	32	static
+main.c:127:5:main	32	static
+main.c:186:6:SystemClock_Config	72	static
+main.c:222:13:MX_CAN_Init	8	static
+main.c:259:13:MX_TIM2_Init	32	static
+main.c:304:13:MX_USART3_UART_Init	8	static
+main.c:337:13:MX_GPIO_Init	32	static
+main.c:370:6:My_CAN_init	8	static
+main.c:403:6:Error_Handler	4	static
