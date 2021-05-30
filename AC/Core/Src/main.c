@@ -32,6 +32,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define CARD_B_CAN_ID 0x0A
+#define CARD_B_CAN_DLC 2
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,10 +47,17 @@ DMA_HandleTypeDef hdma_adc1;
 
 CAN_HandleTypeDef hcan1;
 
+TIM_HandleTypeDef htim2;
+
 UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
+uint16_t ADC_MEANSURE_VALUE[5];
 
+CAN_FilterTypeDef sFilterConfig;
+CAN_TxHeaderTypeDef tx_header_ac;
+uint8_t send_CAN_frame;
+uint32_t mail_can_ac;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,12 +67,14 @@ static void MX_DMA_Init(void);
 static void MX_CAN1_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_UART4_Init(void);
+static void MX_TIM2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 
 /* USER CODE END 0 */
 
@@ -74,7 +85,7 @@ static void MX_UART4_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	HAL_ADC_Start_DMA(&hadc1, &ADC_MEANSURE_VALUE, 5);
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -99,7 +110,14 @@ int main(void)
   MX_CAN1_Init();
   MX_ADC1_Init();
   MX_UART4_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
+  CAN_TxHeaderTypeDef tx_header_ac;
+   	tx_header_ac.StdId  = CARD_B_CAN_ID;
+     tx_header_ac.RTR = CAN_RTR_DATA;
+     tx_header_ac.IDE = CAN_ID_STD;
+     tx_header_ac.DLC = CARD_B_CAN_DLC;
+     tx_header_ac.TransmitGlobalTime = DISABLE;
 
   /* USER CODE END 2 */
 
@@ -107,6 +125,13 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  //TODO
+	  //find better place for this
+	  if (HAL_CAN_AddTxMessage(&hcan, &tx_header_card_back, data_send, &mail_data_card_back) != HAL_OK){
+	  			//ERROR
+		  }
+	  while(HAL_CAN_IsTxMessagePending(&hcan,mail_can_ac));
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -271,6 +296,51 @@ static void MX_CAN1_Init(void)
   /* USER CODE BEGIN CAN1_Init 2 */
 
   /* USER CODE END CAN1_Init 2 */
+
+}
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 10;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 1599;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
 
 }
 
