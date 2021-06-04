@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name karta_stm-rescue)(type Legacy)(uri ${KIPRJMOD}/karta_stm-rescue.lib)(options "")(descr ""))
+)

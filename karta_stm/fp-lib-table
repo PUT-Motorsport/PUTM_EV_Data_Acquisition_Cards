@@ -1,0 +1,6 @@
+(fp_lib_table
+  (lib (name stm322)(type KiCad)(uri C:/Users/molso/Downloads/ul_STM32L4P5RET6/KiCAD/2021-04-28_16-02-19/footprints.pretty)(options "")(descr ""))
+  (lib (name footprints)(type KiCad)(uri "C:/Users/molso/OneDrive/Pulpit/LABY semest7/ul_STM32L4P5RET6(1)/KiCAD/2021-04-28_16-52-18/footprints.pretty")(options "")(descr ""))
+  (lib (name molex)(type KiCad)(uri ${KIPRJMOD}/molex.pretty)(options "")(descr ""))
+  (lib (name Logos)(type KiCad)(uri ${KIPRJMOD}/Logos.pretty)(options "")(descr ""))
+)
