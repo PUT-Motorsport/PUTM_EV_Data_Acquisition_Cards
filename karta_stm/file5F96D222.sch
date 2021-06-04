@@ -1,0 +1,736 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 6 6
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Text GLabel 450  1550 0    50   Output ~ 0
+OUTPUT_0
+$Comp
+L karta_stm-rescue:R-Device R32
+U 1 1 5F96ED66
+P 700 1550
+F 0 "R32" V 493 1550 50  0000 C CNN
+F 1 "100R" V 584 1550 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 630 1550 50  0001 C CNN
+F 3 "~" H 700 1550 50  0001 C CNN
+	1    700  1550
+	0    1    1    0   
+$EndComp
+Wire Wire Line
+	550  1550 450  1550
+$Comp
+L karta_stm-rescue:R-Device R36
+U 1 1 5F948575
+P 1700 850
+F 0 "R36" H 1770 896 50  0000 L CNN
+F 1 "10k" H 1770 805 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 1630 850 50  0001 C CNN
+F 3 "~" H 1700 850 50  0001 C CNN
+	1    1700 850 
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR084
+U 1 1 5F9491F0
+P 1700 1950
+F 0 "#PWR084" H 1700 1700 50  0001 C CNN
+F 1 "GND" H 1705 1777 50  0000 C CNN
+F 2 "" H 1700 1950 50  0001 C CNN
+F 3 "" H 1700 1950 50  0001 C CNN
+	1    1700 1950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1700 1800 1700 1950
+$Comp
+L karta_stm-rescue:Q_PMOS_DGS-Device Q2
+U 1 1 5FA2941B
+P 1600 1200
+F 0 "Q2" H 1805 1246 50  0000 L CNN
+F 1 "Q_PMOS_DGS" H 1805 1155 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 1800 1300 50  0001 C CNN
+F 3 "~" H 1600 1200 50  0001 C CNN
+	1    1600 1200
+	1    0    0    1   
+$EndComp
+$Comp
+L karta_stm-rescue:Q_NMOS_DGS-Device Q3
+U 1 1 5FA2A75C
+P 1600 1600
+F 0 "Q3" H 1804 1646 50  0000 L CNN
+F 1 "Q_NMOS_DGS" H 1804 1555 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 1800 1700 50  0001 C CNN
+F 3 "~" H 1600 1600 50  0001 C CNN
+	1    1600 1600
+	1    0    0    -1  
+$EndComp
+Text GLabel 3150 1650 0    50   Output ~ 0
+OUTPUT_1
+$Comp
+L karta_stm-rescue:R-Device R41
+U 1 1 5FA2E68A
+P 4400 900
+F 0 "R41" H 4470 946 50  0000 L CNN
+F 1 "100k" H 4470 855 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 4330 900 50  0001 C CNN
+F 3 "~" H 4400 900 50  0001 C CNN
+	1    4400 900 
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR092
+U 1 1 5FA2E690
+P 4400 2000
+F 0 "#PWR092" H 4400 1750 50  0001 C CNN
+F 1 "GND" H 4405 1827 50  0000 C CNN
+F 2 "" H 4400 2000 50  0001 C CNN
+F 3 "" H 4400 2000 50  0001 C CNN
+	1    4400 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4400 1850 4400 2000
+Wire Wire Line
+	4100 1650 4100 1450
+Wire Wire Line
+	4050 1450 4100 1450
+Connection ~ 4100 1450
+Wire Wire Line
+	4100 1450 4100 1250
+$Comp
+L karta_stm-rescue:Q_PMOS_DGS-Device Q8
+U 1 1 5FA2E69C
+P 4300 1250
+F 0 "Q8" H 4505 1296 50  0000 L CNN
+F 1 "Q_PMOS_DGS" H 4505 1205 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 4500 1350 50  0001 C CNN
+F 3 "~" H 4300 1250 50  0001 C CNN
+	1    4300 1250
+	1    0    0    1   
+$EndComp
+$Comp
+L karta_stm-rescue:Q_NMOS_DGS-Device Q9
+U 1 1 5FA2E6A2
+P 4300 1650
+F 0 "Q9" H 4504 1696 50  0000 L CNN
+F 1 "Q_NMOS_DGS" H 4504 1605 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 4500 1750 50  0001 C CNN
+F 3 "~" H 4300 1650 50  0001 C CNN
+	1    4300 1650
+	1    0    0    -1  
+$EndComp
+Text GLabel 6100 1600 0    50   Output ~ 0
+OUTPUT_2
+$Comp
+L karta_stm-rescue:R-Device R44
+U 1 1 5FA2EC22
+P 7350 850
+F 0 "R44" H 7420 896 50  0000 L CNN
+F 1 "10k" H 7420 805 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 7280 850 50  0001 C CNN
+F 3 "~" H 7350 850 50  0001 C CNN
+	1    7350 850 
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR096
+U 1 1 5FA2EC28
+P 7350 1950
+F 0 "#PWR096" H 7350 1700 50  0001 C CNN
+F 1 "GND" H 7355 1777 50  0000 C CNN
+F 2 "" H 7350 1950 50  0001 C CNN
+F 3 "" H 7350 1950 50  0001 C CNN
+	1    7350 1950
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7350 1800 7350 1950
+$Comp
+L karta_stm-rescue:Q_PMOS_DGS-Device Q11
+U 1 1 5FA2EC34
+P 7250 1200
+F 0 "Q11" H 7455 1246 50  0000 L CNN
+F 1 "Q_PMOS_DGS" H 7455 1155 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 7450 1300 50  0001 C CNN
+F 3 "~" H 7250 1200 50  0001 C CNN
+	1    7250 1200
+	1    0    0    1   
+$EndComp
+$Comp
+L karta_stm-rescue:Q_NMOS_DGS-Device Q12
+U 1 1 5FA2EC3A
+P 7250 1600
+F 0 "Q12" H 7454 1646 50  0000 L CNN
+F 1 "Q_NMOS_DGS" H 7454 1555 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 7450 1700 50  0001 C CNN
+F 3 "~" H 7250 1600 50  0001 C CNN
+	1    7250 1600
+	1    0    0    -1  
+$EndComp
+Text GLabel 1100 3400 0    50   Output ~ 0
+OUTPUT_4
+$Comp
+L karta_stm-rescue:R-Device R38
+U 1 1 5FA36A3D
+P 2350 2650
+F 0 "R38" H 2420 2696 50  0000 L CNN
+F 1 "10k" H 2420 2605 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 2280 2650 50  0001 C CNN
+F 3 "~" H 2350 2650 50  0001 C CNN
+	1    2350 2650
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR088
+U 1 1 5FA36A43
+P 2350 3750
+F 0 "#PWR088" H 2350 3500 50  0001 C CNN
+F 1 "GND" H 2355 3577 50  0000 C CNN
+F 2 "" H 2350 3750 50  0001 C CNN
+F 3 "" H 2350 3750 50  0001 C CNN
+	1    2350 3750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2350 3600 2350 3750
+$Comp
+L karta_stm-rescue:Q_PMOS_DGS-Device Q5
+U 1 1 5FA36A4F
+P 2250 3000
+F 0 "Q5" H 2455 3046 50  0000 L CNN
+F 1 "Q_PMOS_DGS" H 2455 2955 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 2450 3100 50  0001 C CNN
+F 3 "~" H 2250 3000 50  0001 C CNN
+	1    2250 3000
+	1    0    0    1   
+$EndComp
+$Comp
+L karta_stm-rescue:Q_NMOS_DGS-Device Q6
+U 1 1 5FA36A55
+P 2250 3400
+F 0 "Q6" H 2454 3446 50  0000 L CNN
+F 1 "Q_NMOS_DGS" H 2454 3355 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 2450 3500 50  0001 C CNN
+F 3 "~" H 2250 3400 50  0001 C CNN
+	1    2250 3400
+	1    0    0    -1  
+$EndComp
+Connection ~ 2350 3200
+Wire Wire Line
+	2350 3200 2750 3200
+Text GLabel 2750 3200 2    50   Output ~ 0
+OUT_4
+Connection ~ 9950 1500
+$Comp
+L karta_stm-rescue:Q_NMOS_DGS-Device Q15
+U 1 1 5FA318F3
+P 9850 1700
+F 0 "Q15" H 10054 1746 50  0000 L CNN
+F 1 "Q_NMOS_DGS" H 10054 1655 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 10050 1800 50  0001 C CNN
+F 3 "~" H 9850 1700 50  0001 C CNN
+	1    9850 1700
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:Q_PMOS_DGS-Device Q14
+U 1 1 5FA318ED
+P 9850 1300
+F 0 "Q14" H 10055 1346 50  0000 L CNN
+F 1 "Q_PMOS_DGS" H 10055 1255 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23W_Handsoldering" H 10050 1400 50  0001 C CNN
+F 3 "~" H 9850 1300 50  0001 C CNN
+	1    9850 1300
+	1    0    0    1   
+$EndComp
+Wire Wire Line
+	9950 1500 10350 1500
+Wire Wire Line
+	9950 1900 9950 2050
+$Comp
+L karta_stm-rescue:GND-power #PWR0100
+U 1 1 5FA318E1
+P 9950 2050
+F 0 "#PWR0100" H 9950 1800 50  0001 C CNN
+F 1 "GND" H 9955 1877 50  0000 C CNN
+F 2 "" H 9950 2050 50  0001 C CNN
+F 3 "" H 9950 2050 50  0001 C CNN
+	1    9950 2050
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:R-Device R47
+U 1 1 5FA318DB
+P 9950 950
+F 0 "R47" H 10020 996 50  0000 L CNN
+F 1 "10k" H 10020 905 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 9880 950 50  0001 C CNN
+F 3 "~" H 9950 950 50  0001 C CNN
+	1    9950 950 
+	1    0    0    -1  
+$EndComp
+Text GLabel 10350 1500 2    50   Output ~ 0
+OUT_3
+Wire Wire Line
+	8800 1650 8700 1650
+Text GLabel 8700 1650 0    50   Output ~ 0
+OUTPUT_3
+Text GLabel 7750 1400 2    50   Output ~ 0
+OUT_2
+Connection ~ 7350 1400
+Wire Wire Line
+	7350 1400 7750 1400
+Connection ~ 4400 1450
+Wire Wire Line
+	4400 1450 4800 1450
+Text GLabel 4800 1450 2    50   Output ~ 0
+OUT_1
+Connection ~ 1700 1400
+Wire Wire Line
+	1700 1400 2100 1400
+Text GLabel 2100 1400 2    50   Output ~ 0
+OUT_0
+$Comp
+L karta_stm-rescue:+5V-power #PWR078
+U 1 1 5FC12424
+P 1000 4400
+F 0 "#PWR078" H 1000 4250 50  0001 C CNN
+F 1 "+5V" H 1015 4573 50  0000 C CNN
+F 2 "" H 1000 4400 50  0001 C CNN
+F 3 "" H 1000 4400 50  0001 C CNN
+	1    1000 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:SM6T6V8A-Diode D10
+U 1 1 5FC13A60
+P 1300 4550
+F 0 "D10" V 1254 4630 50  0000 L CNN
+F 1 "SM6T6V8A" V 1345 4630 50  0000 L CNN
+F 2 "Diode_SMD:D_SMB" H 1300 4350 50  0001 C CNN
+F 3 "https://www.st.com/resource/en/datasheet/sm6t.pdf" H 1250 4550 50  0001 C CNN
+	1    1300 4550
+	0    1    1    0   
+$EndComp
+$Comp
+L karta_stm-rescue:R-Device R35
+U 1 1 5FC151FE
+P 1450 4400
+F 0 "R35" V 1243 4400 50  0000 C CNN
+F 1 "10k" V 1334 4400 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 1380 4400 50  0001 C CNN
+F 3 "~" H 1450 4400 50  0001 C CNN
+	1    1450 4400
+	0    1    1    0   
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR081
+U 1 1 5FC16052
+P 1300 4700
+F 0 "#PWR081" H 1300 4450 50  0001 C CNN
+F 1 "GND" H 1305 4527 50  0000 C CNN
+F 2 "" H 1300 4700 50  0001 C CNN
+F 3 "" H 1300 4700 50  0001 C CNN
+	1    1300 4700
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+5VD-power #PWR082
+U 1 1 5FC168F5
+P 1600 4400
+F 0 "#PWR082" H 1600 4250 50  0001 C CNN
+F 1 "+5VD" H 1615 4573 50  0000 C CNN
+F 2 "" H 1600 4400 50  0001 C CNN
+F 3 "" H 1600 4400 50  0001 C CNN
+	1    1600 4400
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:Fuse-Device F2
+U 1 1 5FC17731
+P 1150 4400
+F 0 "F2" V 953 4400 50  0000 C CNN
+F 1 "100mA" V 1044 4400 50  0000 C CNN
+F 2 "Fuse:Fuse_2920_7451Metric_Pad2.10x5.45mm_HandSolder" V 1080 4400 50  0001 C CNN
+F 3 "~" H 1150 4400 50  0001 C CNN
+	1    1150 4400
+	0    1    1    0   
+$EndComp
+Connection ~ 1300 4400
+$Comp
+L karta_stm-rescue:+5VD-power #PWR083
+U 1 1 5FC1B607
+P 1700 700
+F 0 "#PWR083" H 1700 550 50  0001 C CNN
+F 1 "+5VD" H 1715 873 50  0000 C CNN
+F 2 "" H 1700 700 50  0001 C CNN
+F 3 "" H 1700 700 50  0001 C CNN
+	1    1700 700 
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+5VD-power #PWR091
+U 1 1 5FC1C198
+P 4400 750
+F 0 "#PWR091" H 4400 600 50  0001 C CNN
+F 1 "+5VD" H 4415 923 50  0000 C CNN
+F 2 "" H 4400 750 50  0001 C CNN
+F 3 "" H 4400 750 50  0001 C CNN
+	1    4400 750 
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+5VD-power #PWR095
+U 1 1 5FC1CE1A
+P 7350 700
+F 0 "#PWR095" H 7350 550 50  0001 C CNN
+F 1 "+5VD" H 7365 873 50  0000 C CNN
+F 2 "" H 7350 700 50  0001 C CNN
+F 3 "" H 7350 700 50  0001 C CNN
+	1    7350 700 
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+5VD-power #PWR099
+U 1 1 5FC1E234
+P 9950 800
+F 0 "#PWR099" H 9950 650 50  0001 C CNN
+F 1 "+5VD" H 9965 973 50  0000 C CNN
+F 2 "" H 9950 800 50  0001 C CNN
+F 3 "" H 9950 800 50  0001 C CNN
+	1    9950 800 
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+5VD-power #PWR087
+U 1 1 5FC1EB3D
+P 2350 2500
+F 0 "#PWR087" H 2350 2350 50  0001 C CNN
+F 1 "+5VD" H 2365 2673 50  0000 C CNN
+F 2 "" H 2350 2500 50  0001 C CNN
+F 3 "" H 2350 2500 50  0001 C CNN
+	1    2350 2500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1400 1200 1400 1350
+$Comp
+L karta_stm-rescue:+5VD-power #PWR079
+U 1 1 5FC734B8
+P 1150 1050
+F 0 "#PWR079" H 1150 900 50  0001 C CNN
+F 1 "+5VD" H 1165 1223 50  0000 C CNN
+F 2 "" H 1150 1050 50  0001 C CNN
+F 3 "" H 1150 1050 50  0001 C CNN
+	1    1150 1050
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR080
+U 1 1 5FC741A3
+P 1150 1750
+F 0 "#PWR080" H 1150 1500 50  0001 C CNN
+F 1 "GND" H 1155 1577 50  0000 C CNN
+F 2 "" H 1150 1750 50  0001 C CNN
+F 3 "" H 1150 1750 50  0001 C CNN
+	1    1150 1750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1150 1350 1400 1350
+Connection ~ 1400 1350
+Wire Wire Line
+	1400 1350 1400 1600
+Wire Wire Line
+	3250 1650 3150 1650
+$Comp
+L karta_stm-rescue:R-Device R40
+U 1 1 5FC791F8
+P 3850 1300
+F 0 "R40" H 3920 1346 50  0000 L CNN
+F 1 "10k" H 3920 1255 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 3780 1300 50  0001 C CNN
+F 3 "~" H 3850 1300 50  0001 C CNN
+	1    3850 1300
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+5VD-power #PWR089
+U 1 1 5FC791FE
+P 3850 1150
+F 0 "#PWR089" H 3850 1000 50  0001 C CNN
+F 1 "+5VD" H 3865 1323 50  0000 C CNN
+F 2 "" H 3850 1150 50  0001 C CNN
+F 3 "" H 3850 1150 50  0001 C CNN
+	1    3850 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR090
+U 1 1 5FC79204
+P 3850 1850
+F 0 "#PWR090" H 3850 1600 50  0001 C CNN
+F 1 "GND" H 3855 1677 50  0000 C CNN
+F 2 "" H 3850 1850 50  0001 C CNN
+F 3 "" H 3850 1850 50  0001 C CNN
+	1    3850 1850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3850 1450 4100 1450
+Wire Wire Line
+	7050 1200 7050 1400
+Wire Wire Line
+	6200 1600 6100 1600
+$Comp
+L karta_stm-rescue:R-Device R43
+U 1 1 5FC7CFB4
+P 6800 1250
+F 0 "R43" H 6870 1296 50  0000 L CNN
+F 1 "10k" H 6870 1205 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 6730 1250 50  0001 C CNN
+F 3 "~" H 6800 1250 50  0001 C CNN
+	1    6800 1250
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+5VD-power #PWR093
+U 1 1 5FC7CFBA
+P 6800 1100
+F 0 "#PWR093" H 6800 950 50  0001 C CNN
+F 1 "+5VD" H 6815 1273 50  0000 C CNN
+F 2 "" H 6800 1100 50  0001 C CNN
+F 3 "" H 6800 1100 50  0001 C CNN
+	1    6800 1100
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR094
+U 1 1 5FC7CFC0
+P 6800 1800
+F 0 "#PWR094" H 6800 1550 50  0001 C CNN
+F 1 "GND" H 6805 1627 50  0000 C CNN
+F 2 "" H 6800 1800 50  0001 C CNN
+F 3 "" H 6800 1800 50  0001 C CNN
+	1    6800 1800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6800 1400 7050 1400
+Connection ~ 7050 1400
+Wire Wire Line
+	7050 1400 7050 1600
+Wire Wire Line
+	9650 1300 9650 1450
+$Comp
+L karta_stm-rescue:R-Device R46
+U 1 1 5FC8A13F
+P 9400 1300
+F 0 "R46" H 9470 1346 50  0000 L CNN
+F 1 "10k" H 9470 1255 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 9330 1300 50  0001 C CNN
+F 3 "~" H 9400 1300 50  0001 C CNN
+	1    9400 1300
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+5VD-power #PWR097
+U 1 1 5FC8A145
+P 9400 1150
+F 0 "#PWR097" H 9400 1000 50  0001 C CNN
+F 1 "+5VD" H 9415 1323 50  0000 C CNN
+F 2 "" H 9400 1150 50  0001 C CNN
+F 3 "" H 9400 1150 50  0001 C CNN
+	1    9400 1150
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR098
+U 1 1 5FC8A14B
+P 9400 1850
+F 0 "#PWR098" H 9400 1600 50  0001 C CNN
+F 1 "GND" H 9405 1677 50  0000 C CNN
+F 2 "" H 9400 1850 50  0001 C CNN
+F 3 "" H 9400 1850 50  0001 C CNN
+	1    9400 1850
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	9400 1450 9650 1450
+Connection ~ 9650 1450
+Wire Wire Line
+	9650 1450 9650 1700
+Wire Wire Line
+	2050 3000 2050 3200
+Wire Wire Line
+	1200 3400 1100 3400
+$Comp
+L karta_stm-rescue:+5VD-power #PWR085
+U 1 1 5FC8E319
+P 1800 2900
+F 0 "#PWR085" H 1800 2750 50  0001 C CNN
+F 1 "+5VD" H 1815 3073 50  0000 C CNN
+F 2 "" H 1800 2900 50  0001 C CNN
+F 3 "" H 1800 2900 50  0001 C CNN
+	1    1800 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR086
+U 1 1 5FC8E31F
+P 1800 3600
+F 0 "#PWR086" H 1800 3350 50  0001 C CNN
+F 1 "GND" H 1805 3427 50  0000 C CNN
+F 2 "" H 1800 3600 50  0001 C CNN
+F 3 "" H 1800 3600 50  0001 C CNN
+	1    1800 3600
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1800 3200 2050 3200
+Connection ~ 2050 3200
+Wire Wire Line
+	2050 3200 2050 3400
+$Comp
+L karta_stm-rescue:BC817-Transistor_BJT Q1
+U 1 1 5FC73707
+P 1050 1550
+F 0 "Q1" H 1241 1596 50  0000 L CNN
+F 1 "BC817" H 1241 1505 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 1250 1475 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC818-D.pdf" H 1050 1550 50  0001 L CNN
+	1    1050 1550
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:BC817-Transistor_BJT Q7
+U 1 1 5FC749E3
+P 3750 1650
+F 0 "Q7" H 3941 1696 50  0000 L CNN
+F 1 "BC817" H 3941 1605 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 3950 1575 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC818-D.pdf" H 3750 1650 50  0001 L CNN
+	1    3750 1650
+	1    0    0    -1  
+$EndComp
+Connection ~ 3850 1450
+$Comp
+L karta_stm-rescue:BC817-Transistor_BJT Q10
+U 1 1 5FC75942
+P 6700 1600
+F 0 "Q10" H 6891 1646 50  0000 L CNN
+F 1 "BC817" H 6891 1555 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 6900 1525 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC818-D.pdf" H 6700 1600 50  0001 L CNN
+	1    6700 1600
+	1    0    0    -1  
+$EndComp
+Connection ~ 6800 1400
+$Comp
+L karta_stm-rescue:BC817-Transistor_BJT Q4
+U 1 1 5FC78191
+P 1700 3400
+F 0 "Q4" H 1891 3446 50  0000 L CNN
+F 1 "BC817" H 1891 3355 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 1900 3325 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC818-D.pdf" H 1700 3400 50  0001 L CNN
+	1    1700 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:R-Device R39
+U 1 1 5FCBD036
+P 3400 1650
+F 0 "R39" V 3607 1650 50  0000 C CNN
+F 1 "100R" V 3516 1650 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 3330 1650 50  0001 C CNN
+F 3 "~" H 3400 1650 50  0001 C CNN
+	1    3400 1650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L karta_stm-rescue:R-Device R42
+U 1 1 5FCBE1B1
+P 6350 1600
+F 0 "R42" V 6143 1600 50  0000 C CNN
+F 1 "100R" V 6234 1600 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 6280 1600 50  0001 C CNN
+F 3 "~" H 6350 1600 50  0001 C CNN
+	1    6350 1600
+	0    1    1    0   
+$EndComp
+Connection ~ 9400 1450
+$Comp
+L karta_stm-rescue:BC817-Transistor_BJT Q13
+U 1 1 5FC7777D
+P 9300 1650
+F 0 "Q13" H 9491 1696 50  0000 L CNN
+F 1 "BC817" H 9491 1605 50  0000 L CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 9500 1575 50  0001 L CIN
+F 3 "https://www.onsemi.com/pub/Collateral/BC818-D.pdf" H 9300 1650 50  0001 L CNN
+	1    9300 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:R-Device R45
+U 1 1 5FCBFD88
+P 8950 1650
+F 0 "R45" V 8743 1650 50  0000 C CNN
+F 1 "100R" V 8834 1650 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 8880 1650 50  0001 C CNN
+F 3 "~" H 8950 1650 50  0001 C CNN
+	1    8950 1650
+	0    1    1    0   
+$EndComp
+$Comp
+L karta_stm-rescue:R-Device R37
+U 1 1 5FCC1A19
+P 1800 3050
+F 0 "R37" H 1870 3096 50  0000 L CNN
+F 1 "10k" H 1870 3005 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 1730 3050 50  0001 C CNN
+F 3 "~" H 1800 3050 50  0001 C CNN
+	1    1800 3050
+	1    0    0    -1  
+$EndComp
+Connection ~ 1800 3200
+$Comp
+L karta_stm-rescue:R-Device R34
+U 1 1 5FCC2F82
+P 1350 3400
+F 0 "R34" V 1143 3400 50  0000 C CNN
+F 1 "100R" V 1234 3400 50  0000 C CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 1280 3400 50  0001 C CNN
+F 3 "~" H 1350 3400 50  0001 C CNN
+	1    1350 3400
+	0    1    1    0   
+$EndComp
+$Comp
+L karta_stm-rescue:R-Device R33
+U 1 1 5FCC452E
+P 1150 1200
+F 0 "R33" H 1220 1246 50  0000 L CNN
+F 1 "10k" H 1220 1155 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 1080 1200 50  0001 C CNN
+F 3 "~" H 1150 1200 50  0001 C CNN
+	1    1150 1200
+	1    0    0    -1  
+$EndComp
+Connection ~ 1150 1350
+Text Notes 7400 7500 0    79   ~ 0
+Data acquisition card - digital outputs
+Text Notes 7000 6950 0    79   ~ 0
+Michał Molik
+Text Notes 7000 7100 0    79   ~ 16
+PUT MOTORSPORT
+$EndSCHEMATC
