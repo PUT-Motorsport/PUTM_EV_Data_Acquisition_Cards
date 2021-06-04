@@ -1,5 +1,6 @@
 EESchema Schematic File Version 4
-EELAYER 30 0
+LIBS:karta_stm-cache
+EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -357,7 +358,7 @@ U 1 1 60969389
 P 3850 3900
 F 0 "J6" H 3878 3876 50  0000 L CNN
 F 1 "Conn_01x04_Female" H 3878 3785 50  0000 L CNN
-F 2 "Connector_Molex:Molex_Micro-Fit_3.0_43650-0400_1x04_P3.00mm_Horizontal" H 3850 3900 50  0001 C CNN
+F 2 "molex:436500412" H 3850 3900 50  0001 C CNN
 F 3 "~" H 3850 3900 50  0001 C CNN
 	1    3850 3900
 	1    0    0    -1  

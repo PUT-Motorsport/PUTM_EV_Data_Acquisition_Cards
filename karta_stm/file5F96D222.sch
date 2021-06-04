@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:karta_stm-cache
-EELAYER 29 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -82,7 +81,7 @@ L karta_stm-rescue:R-Device R41
 U 1 1 5FA2E68A
 P 4400 900
 F 0 "R41" H 4470 946 50  0000 L CNN
-F 1 "100k" H 4470 855 50  0000 L CNN
+F 1 "10k" H 4470 855 50  0000 L CNN
 F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 4330 900 50  0001 C CNN
 F 3 "~" H 4400 900 50  0001 C CNN
 	1    4400 900 

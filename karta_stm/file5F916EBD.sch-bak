@@ -1,5 +1,6 @@
 EESchema Schematic File Version 4
-EELAYER 30 0
+LIBS:karta_stm-cache
+EELAYER 29 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -450,7 +451,7 @@ U 1 1 60925408
 P 1950 1500
 F 0 "L3" V 1769 1500 50  0000 C CNN
 F 1 "L" V 1860 1500 50  0000 C CNN
-F 2 "Inductor_SMD:L_0805_2012Metric" H 1950 1500 50  0001 C CNN
+F 2 "Inductor_SMD:L_1206_3216Metric" H 1950 1500 50  0001 C CNN
 F 3 "~" H 1950 1500 50  0001 C CNN
 	1    1950 1500
 	0    1    1    0   
