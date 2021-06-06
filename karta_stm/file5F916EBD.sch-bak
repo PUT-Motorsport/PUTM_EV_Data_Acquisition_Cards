@@ -1,6 +1,5 @@
 EESchema Schematic File Version 4
-LIBS:karta_stm-cache
-EELAYER 29 0
+EELAYER 30 0
 EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
@@ -74,7 +73,7 @@ L karta_stm-rescue:D_Schottky-Device D3
 U 1 1 5F91C836
 P 2700 1500
 F 0 "D3" H 2700 1283 50  0000 C CNN
-F 1 "D_Schottky" H 2700 1374 50  0000 C CNN
+F 1 "SS24T3G" H 2700 1374 50  0000 C CNN
 F 2 "Diode_SMD:D_SMB" H 2700 1500 50  0001 C CNN
 F 3 "~" H 2700 1500 50  0001 C CNN
 	1    2700 1500
@@ -188,17 +187,6 @@ Wire Wire Line
 Wire Wire Line
 	700  1500 850  1500
 $Comp
-L karta_stm-rescue:LD1117S33TR_SOT223-Regulator_Linear U4
-U 1 1 5F923BA6
-P 3200 2750
-F 0 "U4" H 3200 2992 50  0000 C CNN
-F 1 "LD1117S33TR_SOT223" H 3200 2901 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 3200 2950 50  0001 C CNN
-F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00000544.pdf" H 3300 2500 50  0001 C CNN
-	1    3200 2750
-	1    0    0    -1  
-$EndComp
-$Comp
 L karta_stm-rescue:+5V-power #PWR022
 U 1 1 5F924B9A
 P 2400 2750
@@ -236,11 +224,6 @@ Wire Wire Line
 Connection ~ 2600 2750
 Wire Wire Line
 	2600 2750 2900 2750
-Wire Wire Line
-	3800 3050 3200 3050
-Connection ~ 3200 3050
-Wire Wire Line
-	3200 3050 2600 3050
 $Comp
 L karta_stm-rescue:GND-power #PWR026
 U 1 1 5F927FAA
@@ -352,7 +335,7 @@ U 1 1 60935A6B
 P 4400 2900
 F 0 "D12" V 4446 2820 50  0000 R CNN
 F 1 "D" V 4355 2820 50  0000 R CNN
-F 2 "Diode_SMD:D_1210_3225Metric_Pad1.42x2.65mm_HandSolder" H 4400 2900 50  0001 C CNN
+F 2 "Diode_SMD:D_1210_3225Metric" H 4400 2900 50  0001 C CNN
 F 3 "~" H 4400 2900 50  0001 C CNN
 	1    4400 2900
 	0    -1   -1   0   
@@ -365,8 +348,8 @@ L Device:R R49
 U 1 1 60936482
 P 4400 3200
 F 0 "R49" H 4470 3246 50  0000 L CNN
-F 1 "1kOhm" H 4470 3155 50  0000 L CNN
-F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 4330 3200 50  0001 C CNN
+F 1 "5kOhm" H 4470 3155 50  0000 L CNN
+F 2 "Resistor_SMD:R_0805_2012Metric" V 4330 3200 50  0001 C CNN
 F 3 "~" H 4400 3200 50  0001 C CNN
 	1    4400 3200
 	1    0    0    -1  
@@ -375,8 +358,6 @@ Wire Wire Line
 	4400 3350 3200 3350
 Wire Wire Line
 	3150 3350 3150 3400
-Wire Wire Line
-	3200 3100 3200 3350
 Connection ~ 3200 3350
 Wire Wire Line
 	3200 3350 3150 3350
@@ -386,7 +367,7 @@ U 1 1 5F917694
 P 1000 1500
 F 0 "F1" V 803 1500 50  0000 C CNN
 F 1 "200mA" V 894 1500 50  0000 C CNN
-F 2 "Fuse:Fuse_2920_7451Metric_Pad2.10x5.45mm_HandSolder" V 930 1500 50  0001 C CNN
+F 2 "Fuse:Fuse_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 930 1500 50  0001 C CNN
 F 3 "~" H 1000 1500 50  0001 C CNN
 	1    1000 1500
 	0    1    1    0   
@@ -467,4 +448,22 @@ F 3 "~" H 2050 4000 50  0001 C CNN
 	1    2050 4000
 	-1   0    0    1   
 $EndComp
+$Comp
+L Regulator_Linear:LM1117-3.3 U4
+U 1 1 60BAD92C
+P 3200 2750
+F 0 "U4" H 3200 2992 50  0000 C CNN
+F 1 "LM1117-3.3" H 3200 2901 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 3200 2750 50  0001 C CNN
+F 3 "http://www.ti.com/lit/ds/symlink/lm1117.pdf" H 3200 2750 50  0001 C CNN
+	1    3200 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2600 3050 3200 3050
+Connection ~ 3200 3050
+Wire Wire Line
+	3200 3050 3800 3050
+Wire Wire Line
+	3200 3050 3200 3350
 $EndSCHEMATC
