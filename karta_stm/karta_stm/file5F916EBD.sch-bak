@@ -1,0 +1,469 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 3 6
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L karta_stm-rescue:LM2596S-5-Regulator_Switching U3
+U 1 1 5F9170D2
+P 4300 1600
+F 0 "U3" H 4300 1967 50  0000 C CNN
+F 1 "LM2596S-5" H 4300 1876 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:TO-263-5_TabPin3" H 4350 1350 50  0001 L CIN
+F 3 "http://www.ti.com/lit/ds/symlink/lm2596.pdf" H 4300 1600 50  0001 C CNN
+	1    4300 1600
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:D_Schottky-Device D4
+U 1 1 5F918C32
+P 5500 1850
+F 0 "D4" V 5454 1930 50  0000 L CNN
+F 1 "1N5824" V 5545 1930 50  0000 L CNN
+F 2 "Diode_SMD:D_SMB" H 5500 1850 50  0001 C CNN
+F 3 "~" H 5500 1850 50  0001 C CNN
+	1    5500 1850
+	0    1    1    0   
+$EndComp
+$Comp
+L karta_stm-rescue:L-Device L2
+U 1 1 5F91A145
+P 5950 1700
+F 0 "L2" V 5769 1700 50  0000 C CNN
+F 1 "33uH" V 5860 1700 50  0000 C CNN
+F 2 "Inductor_SMD:L_12x12mm_H8mm" H 5950 1700 50  0001 C CNN
+F 3 "~" H 5950 1700 50  0001 C CNN
+	1    5950 1700
+	0    1    1    0   
+$EndComp
+$Comp
+L karta_stm-rescue:C_Polarized-Device C17
+U 1 1 5F91AE32
+P 6450 1850
+F 0 "C17" H 6568 1896 50  0000 L CNN
+F 1 "220uF" H 6568 1805 50  0000 L CNN
+F 2 "Capacitor_SMD:CP_Elec_6.3x7.7" H 6488 1700 50  0001 C CNN
+F 3 "~" H 6450 1850 50  0001 C CNN
+	1    6450 1850
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:C_Polarized-Device C13
+U 1 1 5F91B94B
+P 3050 1750
+F 0 "C13" H 3168 1796 50  0000 L CNN
+F 1 "100uF" H 3168 1705 50  0000 L CNN
+F 2 "Capacitor_SMD:CP_Elec_6.3x7.7" H 3088 1600 50  0001 C CNN
+F 3 "~" H 3050 1750 50  0001 C CNN
+	1    3050 1750
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:D_Schottky-Device D3
+U 1 1 5F91C836
+P 2700 1500
+F 0 "D3" H 2700 1283 50  0000 C CNN
+F 1 "D_Schottky" H 2700 1374 50  0000 C CNN
+F 2 "Diode_SMD:D_SMB" H 2700 1500 50  0001 C CNN
+F 3 "~" H 2700 1500 50  0001 C CNN
+	1    2700 1500
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3050 1600 3050 1500
+Wire Wire Line
+	4800 1700 5500 1700
+Wire Wire Line
+	5500 1700 5800 1700
+Connection ~ 5500 1700
+Wire Wire Line
+	6100 1700 6450 1700
+$Comp
+L karta_stm-rescue:GND-power #PWR025
+U 1 1 5F91E801
+P 4300 1900
+F 0 "#PWR025" H 4300 1650 50  0001 C CNN
+F 1 "GND" H 4305 1727 50  0000 C CNN
+F 2 "" H 4300 1900 50  0001 C CNN
+F 3 "" H 4300 1900 50  0001 C CNN
+	1    4300 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR019
+U 1 1 5F91EEC0
+P 3050 1900
+F 0 "#PWR019" H 3050 1650 50  0001 C CNN
+F 1 "GND" H 3055 1727 50  0000 C CNN
+F 2 "" H 3050 1900 50  0001 C CNN
+F 3 "" H 3050 1900 50  0001 C CNN
+	1    3050 1900
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR027
+U 1 1 5F91F8E1
+P 5500 2000
+F 0 "#PWR027" H 5500 1750 50  0001 C CNN
+F 1 "GND" H 5505 1827 50  0000 C CNN
+F 2 "" H 5500 2000 50  0001 C CNN
+F 3 "" H 5500 2000 50  0001 C CNN
+	1    5500 2000
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR029
+U 1 1 5F91FE45
+P 6450 2000
+F 0 "#PWR029" H 6450 1750 50  0001 C CNN
+F 1 "GND" H 6455 1827 50  0000 C CNN
+F 2 "" H 6450 2000 50  0001 C CNN
+F 3 "" H 6450 2000 50  0001 C CNN
+	1    6450 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4800 1500 6450 1500
+Wire Wire Line
+	6450 1500 6450 1700
+Connection ~ 6450 1700
+$Comp
+L karta_stm-rescue:GND-power #PWR023
+U 1 1 5F92073F
+P 3750 1900
+F 0 "#PWR023" H 3750 1650 50  0001 C CNN
+F 1 "GND" H 3755 1727 50  0000 C CNN
+F 2 "" H 3750 1900 50  0001 C CNN
+F 3 "" H 3750 1900 50  0001 C CNN
+	1    3750 1900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2850 1500 3050 1500
+Connection ~ 3050 1500
+Wire Wire Line
+	3050 1500 3500 1500
+Wire Wire Line
+	3800 1700 3750 1700
+Wire Wire Line
+	3750 1700 3750 1900
+$Comp
+L karta_stm-rescue:+5V-power #PWR030
+U 1 1 5F922609
+P 6700 1500
+F 0 "#PWR030" H 6700 1350 50  0001 C CNN
+F 1 "+5V" H 6715 1673 50  0000 C CNN
+F 2 "" H 6700 1500 50  0001 C CNN
+F 3 "" H 6700 1500 50  0001 C CNN
+	1    6700 1500
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6700 1500 6450 1500
+Connection ~ 6450 1500
+$Comp
+L karta_stm-rescue:+BATT-power #PWR017
+U 1 1 5F922DAB
+P 700 1350
+F 0 "#PWR017" H 700 1200 50  0001 C CNN
+F 1 "+BATT" H 715 1523 50  0000 C CNN
+F 2 "" H 700 1350 50  0001 C CNN
+F 3 "" H 700 1350 50  0001 C CNN
+	1    700  1350
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	700  1350 700  1500
+Wire Wire Line
+	700  1500 850  1500
+$Comp
+L karta_stm-rescue:LD1117S33TR_SOT223-Regulator_Linear U4
+U 1 1 5F923BA6
+P 3200 2750
+F 0 "U4" H 3200 2992 50  0000 C CNN
+F 1 "LD1117S33TR_SOT223" H 3200 2901 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 3200 2950 50  0001 C CNN
+F 3 "http://www.st.com/st-web-ui/static/active/en/resource/technical/document/datasheet/CD00000544.pdf" H 3300 2500 50  0001 C CNN
+	1    3200 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+5V-power #PWR022
+U 1 1 5F924B9A
+P 2400 2750
+F 0 "#PWR022" H 2400 2600 50  0001 C CNN
+F 1 "+5V" H 2415 2923 50  0000 C CNN
+F 2 "" H 2400 2750 50  0001 C CNN
+F 3 "" H 2400 2750 50  0001 C CNN
+	1    2400 2750
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:C-Device C15
+U 1 1 5F9257A5
+P 2600 2900
+F 0 "C15" H 2715 2946 50  0000 L CNN
+F 1 "100nF" H 2715 2855 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 2638 2750 50  0001 C CNN
+F 3 "~" H 2600 2900 50  0001 C CNN
+	1    2600 2900
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+3.3V-power #PWR028
+U 1 1 5F92672D
+P 4550 2750
+F 0 "#PWR028" H 4550 2600 50  0001 C CNN
+F 1 "+3.3V" H 4565 2923 50  0000 C CNN
+F 2 "" H 4550 2750 50  0001 C CNN
+F 3 "" H 4550 2750 50  0001 C CNN
+	1    4550 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2400 2750 2600 2750
+Connection ~ 2600 2750
+Wire Wire Line
+	2600 2750 2900 2750
+Wire Wire Line
+	3800 3050 3200 3050
+Connection ~ 3200 3050
+Wire Wire Line
+	3200 3050 2600 3050
+$Comp
+L karta_stm-rescue:GND-power #PWR026
+U 1 1 5F927FAA
+P 3150 3400
+F 0 "#PWR026" H 3150 3150 50  0001 C CNN
+F 1 "GND" H 3155 3227 50  0000 C CNN
+F 2 "" H 3150 3400 50  0001 C CNN
+F 3 "" H 3150 3400 50  0001 C CNN
+	1    3150 3400
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:+BATT-power #PWR024
+U 1 1 5F94A3AA
+P 2650 3750
+F 0 "#PWR024" H 2650 3600 50  0001 C CNN
+F 1 "+BATT" H 2665 3923 50  0000 C CNN
+F 2 "" H 2650 3750 50  0001 C CNN
+F 3 "" H 2650 3750 50  0001 C CNN
+	1    2650 3750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2250 3900 2650 3900
+Wire Wire Line
+	2650 3900 2650 3750
+$Comp
+L karta_stm-rescue:GND-power #PWR020
+U 1 1 5F94AD0B
+P 2250 4150
+F 0 "#PWR020" H 2250 3900 50  0001 C CNN
+F 1 "GND" H 2255 3977 50  0000 C CNN
+F 2 "" H 2250 4150 50  0001 C CNN
+F 3 "" H 2250 4150 50  0001 C CNN
+	1    2250 4150
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2250 4000 2250 4150
+$Comp
+L karta_stm-rescue:SM6T30A-Diode D2
+U 1 1 5FA08B10
+P 2400 1650
+F 0 "D2" V 2354 1730 50  0000 L CNN
+F 1 "SM6T30A" V 2445 1730 50  0000 L CNN
+F 2 "Diode_SMD:D_SMB" H 2400 1450 50  0001 C CNN
+F 3 "https://www.st.com/resource/en/datasheet/sm6t.pdf" H 2350 1650 50  0001 C CNN
+	1    2400 1650
+	0    1    1    0   
+$EndComp
+Connection ~ 2400 1500
+Wire Wire Line
+	2400 1500 2550 1500
+$Comp
+L karta_stm-rescue:GND-power #PWR018
+U 1 1 5FA09BAD
+P 2400 1800
+F 0 "#PWR018" H 2400 1550 50  0001 C CNN
+F 1 "GND" H 2405 1627 50  0000 C CNN
+F 2 "" H 2400 1800 50  0001 C CNN
+F 3 "" H 2400 1800 50  0001 C CNN
+	1    2400 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:C-Device C14
+U 1 1 5FAD1295
+P 3500 1650
+F 0 "C14" H 3615 1696 50  0000 L CNN
+F 1 "100nF" H 3615 1605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 3538 1500 50  0001 C CNN
+F 3 "~" H 3500 1650 50  0001 C CNN
+	1    3500 1650
+	1    0    0    -1  
+$EndComp
+Connection ~ 3500 1500
+Wire Wire Line
+	3500 1500 3800 1500
+$Comp
+L karta_stm-rescue:GND-power #PWR021
+U 1 1 5FAD161F
+P 3500 1800
+F 0 "#PWR021" H 3500 1550 50  0001 C CNN
+F 1 "GND" H 3505 1627 50  0000 C CNN
+F 2 "" H 3500 1800 50  0001 C CNN
+F 3 "" H 3500 1800 50  0001 C CNN
+	1    3500 1800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3500 2750 3800 2750
+$Comp
+L karta_stm-rescue:C-Device C16
+U 1 1 5FAD1E0C
+P 3800 2900
+F 0 "C16" H 3915 2946 50  0000 L CNN
+F 1 "100nF" H 3915 2855 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 3838 2750 50  0001 C CNN
+F 3 "~" H 3800 2900 50  0001 C CNN
+	1    3800 2900
+	1    0    0    -1  
+$EndComp
+Connection ~ 3800 2750
+Wire Wire Line
+	3800 2750 4400 2750
+$Comp
+L Device:D D12
+U 1 1 60935A6B
+P 4400 2900
+F 0 "D12" V 4446 2820 50  0000 R CNN
+F 1 "D" V 4355 2820 50  0000 R CNN
+F 2 "Diode_SMD:D_1210_3225Metric_Castellated" H 4400 2900 50  0001 C CNN
+F 3 "~" H 4400 2900 50  0001 C CNN
+	1    4400 2900
+	0    -1   -1   0   
+$EndComp
+Connection ~ 4400 2750
+Wire Wire Line
+	4400 2750 4550 2750
+$Comp
+L Device:R R49
+U 1 1 60936482
+P 4400 3200
+F 0 "R49" H 4470 3246 50  0000 L CNN
+F 1 "1kOhm" H 4470 3155 50  0000 L CNN
+F 2 "Resistor_SMD:R_1206_3216Metric_Pad1.42x1.75mm_HandSolder" V 4330 3200 50  0001 C CNN
+F 3 "~" H 4400 3200 50  0001 C CNN
+	1    4400 3200
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3150 3350 3150 3400
+$Comp
+L karta_stm-rescue:Fuse-Device F1
+U 1 1 5F917694
+P 1000 1500
+F 0 "F1" V 803 1500 50  0000 C CNN
+F 1 "200mA" V 894 1500 50  0000 C CNN
+F 2 "Fuse:Fuse_2816_7142Metric" V 930 1500 50  0001 C CNN
+F 3 "~" H 1000 1500 50  0001 C CNN
+	1    1000 1500
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:C C23
+U 1 1 6091CA22
+P 1250 1650
+F 0 "C23" H 1365 1696 50  0000 L CNN
+F 1 "C" H 1365 1605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 1288 1500 50  0001 C CNN
+F 3 "~" H 1250 1650 50  0001 C CNN
+	1    1250 1650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C24
+U 1 1 6091D091
+P 1600 1650
+F 0 "C24" H 1715 1696 50  0000 L CNN
+F 1 "C" H 1715 1605 50  0000 L CNN
+F 2 "Capacitor_SMD:C_1206_3216Metric" H 1638 1500 50  0001 C CNN
+F 3 "~" H 1600 1650 50  0001 C CNN
+	1    1600 1650
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2100 1500 2400 1500
+Wire Wire Line
+	1800 1500 1600 1500
+Connection ~ 1250 1500
+Wire Wire Line
+	1250 1500 1150 1500
+Connection ~ 1600 1500
+Wire Wire Line
+	1600 1500 1250 1500
+$Comp
+L karta_stm-rescue:GND-power #PWR0105
+U 1 1 6091F6A7
+P 1250 1800
+F 0 "#PWR0105" H 1250 1550 50  0001 C CNN
+F 1 "GND" H 1255 1627 50  0000 C CNN
+F 2 "" H 1250 1800 50  0001 C CNN
+F 3 "" H 1250 1800 50  0001 C CNN
+	1    1250 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L karta_stm-rescue:GND-power #PWR0106
+U 1 1 6091FE4D
+P 1600 1800
+F 0 "#PWR0106" H 1600 1550 50  0001 C CNN
+F 1 "GND" H 1605 1627 50  0000 C CNN
+F 2 "" H 1600 1800 50  0001 C CNN
+F 3 "" H 1600 1800 50  0001 C CNN
+	1    1600 1800
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:L L3
+U 1 1 60925408
+P 1950 1500
+F 0 "L3" V 1769 1500 50  0000 C CNN
+F 1 "L" V 1860 1500 50  0000 C CNN
+F 2 "Inductor_SMD:L_1206_3216Metric" H 1950 1500 50  0001 C CNN
+F 3 "~" H 1950 1500 50  0001 C CNN
+	1    1950 1500
+	0    1    1    0   
+$EndComp
+$Comp
+L Connector:Conn_01x02_Female J4
+U 1 1 6096B159
+P 2050 4000
+F 0 "J4" H 1942 3675 50  0000 C CNN
+F 1 "Conn_01x02_Female" H 1942 3766 50  0000 C CNN
+F 2 "Connector_Molex:Molex_Micro-Fit_3.0_43650-0200_1x02_P3.00mm_Horizontal" H 2050 4000 50  0001 C CNN
+F 3 "~" H 2050 4000 50  0001 C CNN
+	1    2050 4000
+	-1   0    0    1   
+$EndComp
+Wire Wire Line
+	3150 3350 3200 3350
+Wire Wire Line
+	3200 3050 3200 3350
+Connection ~ 3200 3350
+Wire Wire Line
+	3200 3350 4400 3350
+$EndSCHEMATC
