@@ -21,8 +21,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32l4xx_it.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -65,6 +67,8 @@ uint16_t  cnt = 0;
 uint8_t flag =0;
 static uint16_t c_count_2;
 uint8_t flag_2 =0;
+
+extern uint8_t send_CAN_flag;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -225,37 +229,42 @@ void DMA1_Channel1_IRQHandler(void)
 void TIM2_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
-	  uint8_t data_send[12];
-	  uint8_t size =0;
-	 cnt++;
-	  if(HAL_GPIO_ReadPin(Speed_input_pin_GPIO_Port, Speed_input_pin_Pin) == 0 && flag == 0 )
-	  	{
-	  		c_count++;
-	  		flag = 1;
-	  	}
-	  	else if(HAL_GPIO_ReadPin(Speed_input_pin_GPIO_Port, Speed_input_pin_Pin)  == 1)
-	  	{
-	  		flag = 0;
-	  	}
-	  if(HAL_GPIO_ReadPin(Speed_input_pin2_GPIO_Port, Speed_input_pin2_Pin) == 0 && flag_2 == 0 )
-	    	{
-	    		c_count_2++;
-	    		flag_2 = 1;
-	    	}
-	    	else if(HAL_GPIO_ReadPin(Speed_input_pin2_GPIO_Port, Speed_input_pin2_Pin)  == 1)
-	    	{
-	    		flag_2 = 0;
-	    	}
-	  	if(cnt == 10000)
-	  	{
-	  		size = sprintf(data_send, "obr/sek: %d  \n\r", c_count/8);
-	  		c_count_2=0;
+	uint8_t data_send[18];
+	uint8_t size = 0;
+	static uint8_t send_CAN_cnt;
 
-	  		//TODO TO CHECK?
-	  		HAL_UART_Transmit_IT(&huart4, &data_send, size);
-	  		cnt = 0;
-	  		c_count = 0;
-	  	}
+	send_CAN_cnt++;
+	cnt++;
+	if(send_CAN_cnt == 10)
+	{
+		send_CAN_flag = 1;
+		send_CAN_cnt = 0;
+	}
+
+
+	if (HAL_GPIO_ReadPin(D_INPUT_2_GPIO_Port, D_INPUT_2_Pin) == 0
+			&& flag == 0) {
+		c_count++;
+		flag = 1;
+	} else if (HAL_GPIO_ReadPin(D_INPUT_2_GPIO_Port, D_INPUT_2_Pin) == 1) {
+		flag = 0;
+	}
+	if (HAL_GPIO_ReadPin(D_INPUT_3_GPIO_Port, D_INPUT_3_Pin) == 0
+			&& flag_2 == 0) {
+		c_count_2++;
+		flag_2 = 1;
+	} else if (HAL_GPIO_ReadPin(D_INPUT_3_GPIO_Port, D_INPUT_3_Pin) == 1) {
+		flag_2 = 0;
+	}
+	if (cnt == 10000) {
+		size = sprintf(data_send, "obr/sek: %d  \n\r", c_count / 8);
+		c_count_2 = 0;
+
+		//TODO TO CHECK?
+		HAL_UART_Transmit_IT(&huart4, data_send, size);
+		cnt = 0;
+		c_count = 0;
+	}
   /* USER CODE END TIM2_IRQn 0 */
   HAL_TIM_IRQHandler(&htim2);
   /* USER CODE BEGIN TIM2_IRQn 1 */

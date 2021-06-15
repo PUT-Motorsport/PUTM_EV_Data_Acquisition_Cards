@@ -56,8 +56,9 @@ uint16_t ADC_MEANSURE_VALUE[5];
 
 CAN_FilterTypeDef sFilterConfig;
 CAN_TxHeaderTypeDef tx_header_ac;
-uint8_t send_CAN_frame;
+uint8_t send_CAN_flag;
 uint32_t mail_can_ac;
+uint8_t ac_data[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,7 +86,7 @@ static void MX_TIM2_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	HAL_ADC_Start_DMA(&hadc1, &ADC_MEANSURE_VALUE, 5);
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -119,26 +120,30 @@ int main(void)
      tx_header_ac.DLC = CARD_B_CAN_DLC;
      tx_header_ac.TransmitGlobalTime = DISABLE;
 
+     HAL_ADC_Start_DMA(&hadc1, ADC_MEANSURE_VALUE, 5);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  //TODO
-	  //find better place for this
-	  if (HAL_CAN_AddTxMessage(&hcan, &tx_header_card_back, data_send, &mail_data_card_back) != HAL_OK){
-	  			//ERROR
-		  }
-	  while(HAL_CAN_IsTxMessagePending(&hcan,mail_can_ac));
+	while (1) {
+		if (send_CAN_flag) {
+			if (HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac, ac_data,
+					&mail_can_ac) != HAL_OK) {
+				//ERROR
+				Error_Handler();
+			}
+			while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac))
+				;
+			send_CAN_flag = 0;
+		}
 
-    /* USER CODE END WHILE */
+		/* USER CODE END WHILE */
 
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
+		/* USER CODE BEGIN 3 */
+
+		/* USER CODE END 3 */
+	}
 }
-
 /**
   * @brief System Clock Configuration
   * @retval None

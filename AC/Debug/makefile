@@ -61,8 +61,8 @@ all: main-build
 main-build: AC.elf secondary-outputs
 
 # Tool invocations
-AC.elf: $(OBJS) $(USER_OBJS) C:\Users\molso\STM32CubeIDE\workspace_1.4.0\PUTM_EV_Data_Acquisition_Cards\AC\STM32L4P5RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "AC.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\molso\STM32CubeIDE\workspace_1.4.0\PUTM_EV_Data_Acquisition_Cards\AC\STM32L4P5RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="AC.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+AC.elf: $(OBJS) $(USER_OBJS) C:\Users\molso\STM32CubeIDE\workspace_1.4.0\AC\STM32L4P5RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "AC.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\molso\STM32CubeIDE\workspace_1.4.0\AC\STM32L4P5RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="AC.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
