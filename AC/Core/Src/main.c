@@ -32,8 +32,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define CARD_B_CAN_ID 0x0B
-#define CARD_B_CAN_DLC 8
+#define CARD_B_CAN_ID 0x0A
+#define CARD_B_CAN_DLC 2
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -61,13 +61,17 @@ uint8_t send_CAN_20Hz_flag;
 uint8_t send_Usart_flag;
 uint8_t timer2_it_flag;
 uint32_t mail_can_ac;
-uint8_t ac_data[10] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+uint8_t ac_data[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+HAL_StatusTypeDef error_can_status;
 
 static uint16_t c_count;			//count impulse from D_INPUT2_PIN
 uint16_t cnt = 0;					// count timer2
 uint8_t flag = 0;
 static uint16_t c_count_2;			//count impulse from D_INPUT3_PIN
 uint8_t flag_2 = 0;
+
+static uint16_t send_CAN_cnt = 0;
+static uint16_t send_CAN20Hz_cnt = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -120,14 +124,14 @@ int main(void) {
 	MX_UART4_Init();
 	MX_TIM2_Init();
 	/* USER CODE BEGIN 2 */
+	HAL_ADC_Start_DMA(&hadc1, ADC_MEANSURE_VALUE, 5);
 	CAN_TxHeaderTypeDef tx_header_ac;
 	tx_header_ac.StdId = CARD_B_CAN_ID;
 	tx_header_ac.RTR = CAN_RTR_DATA;
 	tx_header_ac.IDE = CAN_ID_STD;
 	tx_header_ac.DLC = CARD_B_CAN_DLC;
 	tx_header_ac.TransmitGlobalTime = DISABLE;
-
-	HAL_ADC_Start_DMA(&hadc1, ADC_MEANSURE_VALUE, 5);
+	mail_can_ac = 0;
 	HAL_TIM_Base_Start_IT(&htim2);
 	/* USER CODE END 2 */
 
@@ -140,13 +144,18 @@ int main(void) {
 
 			if (HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac, ac_data,
 					&mail_can_ac) != HAL_OK) {
+				error_can_status = HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac,
+						ac_data, &mail_can_ac);
+
 				//ERROR
 				Error_Handler();
 			}
+			//	while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac));
 			send_CAN_flag = 0;
 		}
 
 		if (send_CAN_20Hz_flag) {
+			HAL_GPIO_TogglePin(DIODE_0_GPIO_Port, DIODE_0_Pin);
 
 			int16_t val = ADC_MEANSURE_VALUE[1];
 			ac_data[0] = (int8_t) (val & 0x00FF);
@@ -164,9 +173,9 @@ int main(void) {
 			ac_data[6] = (int8_t) (val_3 & 0x00FF);
 			ac_data[7] = (int8_t) (val_3 >> 8);
 
-		//	int16_t val_4 = ADC_MEANSURE_VALUE[4];
-		//	ac_data[8] = (int8_t) (val_4 & 0x00FF);
-		//	ac_data[9] = (int8_t) (val_4 >> 8);
+			//	int16_t val_4 = ADC_MEANSURE_VALUE[4];
+			//	ac_data[8] = (int8_t) (val_4 & 0x00FF);
+			//	ac_data[9] = (int8_t) (val_4 >> 8);
 			if (HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac, ac_data,
 					&mail_can_ac) != HAL_OK) {
 				//ERROR
@@ -177,6 +186,17 @@ int main(void) {
 		if (timer2_it_flag) {
 			timer2_it_flag = 0;
 			cnt++;
+			send_CAN20Hz_cnt++;
+			send_CAN_cnt++;
+
+			if (send_CAN_cnt > 10) {
+				send_CAN_flag = 1;
+				send_CAN_cnt = 0;
+			}
+			if (send_CAN20Hz_cnt > 50) {
+				send_CAN_20Hz_flag = 1;
+				send_CAN20Hz_cnt = 0;
+			}
 
 			uint8_t data_send[18];
 			uint8_t size = 0;
@@ -201,19 +221,20 @@ int main(void) {
 				size = sprintf(data_send, "rpm/s: %d  \n\r", c_count / 8);
 				c_count_2 = 0;
 
-				HAL_UART_Transmit(&huart4, data_send, size);
+				//	HAL_UART_Transmit(&huart4, data_send, size, 100);
 				cnt = 0;
 				c_count = 0;
 			}
 		}
-
-		/* USER CODE END WHILE */
-
-		/* USER CODE BEGIN 3 */
-
-		/* USER CODE END 3 */
 	}
+
+	/* USER CODE END WHILE */
+
+	/* USER CODE BEGIN 3 */
+
+	/* USER CODE END 3 */
 }
+
 /**
  * @brief System Clock Configuration
  * @retval None
@@ -256,7 +277,7 @@ void SystemClock_Config(void) {
 		Error_Handler();
 	}
 	PeriphClkInit.PeriphClockSelection =
-	RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_ADC;
+			RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_ADC;
 	PeriphClkInit.Uart4ClockSelection = RCC_UART4CLKSOURCE_PCLK1;
 	PeriphClkInit.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
 	PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_HSI;
@@ -291,18 +312,18 @@ static void MX_ADC1_Init(void) {
 	/** Common config
 	 */
 	hadc1.Instance = ADC1;
-	hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
+	hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV8;
 	hadc1.Init.Resolution = ADC_RESOLUTION_12B;
 	hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-	hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
+	hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
 	hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
 	hadc1.Init.LowPowerAutoWait = DISABLE;
-	hadc1.Init.ContinuousConvMode = DISABLE;
-	hadc1.Init.NbrOfConversion = 1;
+	hadc1.Init.ContinuousConvMode = ENABLE;
+	hadc1.Init.NbrOfConversion = 5;
 	hadc1.Init.DiscontinuousConvMode = DISABLE;
 	hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
 	hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-	hadc1.Init.DMAContinuousRequests = DISABLE;
+	hadc1.Init.DMAContinuousRequests = ENABLE;
 	hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
 	hadc1.Init.OversamplingMode = DISABLE;
 	if (HAL_ADC_Init(&hadc1) != HAL_OK) {
@@ -318,10 +339,38 @@ static void MX_ADC1_Init(void) {
 	 */
 	sConfig.Channel = ADC_CHANNEL_1;
 	sConfig.Rank = ADC_REGULAR_RANK_1;
-	sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+	sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
 	sConfig.SingleDiff = ADC_SINGLE_ENDED;
 	sConfig.OffsetNumber = ADC_OFFSET_NONE;
 	sConfig.Offset = 0;
+	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
+		Error_Handler();
+	}
+	/** Configure Regular Channel
+	 */
+	sConfig.Channel = ADC_CHANNEL_2;
+	sConfig.Rank = ADC_REGULAR_RANK_2;
+	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
+		Error_Handler();
+	}
+	/** Configure Regular Channel
+	 */
+	sConfig.Channel = ADC_CHANNEL_3;
+	sConfig.Rank = ADC_REGULAR_RANK_3;
+	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
+		Error_Handler();
+	}
+	/** Configure Regular Channel
+	 */
+	sConfig.Channel = ADC_CHANNEL_4;
+	sConfig.Rank = ADC_REGULAR_RANK_4;
+	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
+		Error_Handler();
+	}
+	/** Configure Regular Channel
+	 */
+	sConfig.Channel = ADC_CHANNEL_5;
+	sConfig.Rank = ADC_REGULAR_RANK_5;
 	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK) {
 		Error_Handler();
 	}
@@ -346,7 +395,7 @@ static void MX_CAN1_Init(void) {
 
 	/* USER CODE END CAN1_Init 1 */
 	hcan1.Instance = CAN1;
-	hcan1.Init.Prescaler = 2;
+	hcan1.Init.Prescaler = 8;
 	hcan1.Init.Mode = CAN_MODE_NORMAL;
 	hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
 	hcan1.Init.TimeSeg1 = CAN_BS1_6TQ;
@@ -494,7 +543,7 @@ static void MX_GPIO_Init(void) {
 	/*Configure GPIO pin : DIODE_0_Pin */
 	GPIO_InitStruct.Pin = DIODE_0_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Pull = GPIO_PULLDOWN;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(DIODE_0_GPIO_Port, &GPIO_InitStruct);
 
@@ -523,21 +572,8 @@ static void MX_GPIO_Init(void) {
 
 /* USER CODE BEGIN 4 */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-	if (htim == &htim2) {
+	if (htim->Instance == TIM2) {
 		timer2_it_flag = 1;
-		static uint16_t send_CAN_cnt;
-		static uint16_t send_CAN20Hz_cnt;
-
-		send_CAN20Hz_cnt++;
-		send_CAN_cnt++;
-		if (send_CAN_cnt == 10) {
-			send_CAN_flag = 1;
-			send_CAN_cnt = 0;
-		}
-		if (send_CAN20Hz_cnt == 50) {
-			send_CAN_20Hz_flag = 1;
-			send_CAN20Hz_cnt = 0;
-		}
 
 	}
 }
