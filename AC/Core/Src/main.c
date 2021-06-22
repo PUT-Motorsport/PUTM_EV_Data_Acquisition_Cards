@@ -19,7 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include <stdbool.h>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -52,7 +52,8 @@ TIM_HandleTypeDef htim2;
 UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
-uint16_t ADC_MEANSURE_VALUE[5];
+#define ADC_MEANSURE_VALUE_SIZE 5
+uint32_t ADC_MEANSURE_VALUE[ADC_MEANSURE_VALUE_SIZE];
 
 CAN_FilterTypeDef sFilterConfig;
 CAN_TxHeaderTypeDef tx_header_ac;
@@ -61,7 +62,7 @@ uint8_t send_CAN_20Hz_flag;
 uint8_t send_Usart_flag;
 uint8_t timer2_it_flag;
 uint32_t mail_can_ac;
-uint8_t ac_data[8] = { 0, 0, 0, 0, 0, 0, 0, 0 };
+uint8_t ac_data[8] = { 0 };
 HAL_StatusTypeDef error_can_status;
 
 static uint16_t c_count;			//count impulse from D_INPUT2_PIN
@@ -72,6 +73,7 @@ uint8_t flag_2 = 0;
 
 static uint16_t send_CAN_cnt = 0;
 static uint16_t send_CAN20Hz_cnt = 0;
+CAN_FilterTypeDef sFilterConfig;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -124,7 +126,9 @@ int main(void) {
 	MX_UART4_Init();
 	MX_TIM2_Init();
 	/* USER CODE BEGIN 2 */
-	HAL_ADC_Start_DMA(&hadc1, ADC_MEANSURE_VALUE, 5);
+	HAL_ADC_Start_DMA(&hadc1, ADC_MEANSURE_VALUE, ADC_MEANSURE_VALUE_SIZE);
+	HAL_TIM_Base_Start_IT(&htim2);
+
 	CAN_TxHeaderTypeDef tx_header_ac;
 	tx_header_ac.StdId = CARD_B_CAN_ID;
 	tx_header_ac.RTR = CAN_RTR_DATA;
@@ -132,7 +136,28 @@ int main(void) {
 	tx_header_ac.DLC = CARD_B_CAN_DLC;
 	tx_header_ac.TransmitGlobalTime = DISABLE;
 	mail_can_ac = 0;
-	HAL_TIM_Base_Start_IT(&htim2);
+
+	sFilterConfig.FilterBank = 0;
+	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	sFilterConfig.FilterIdHigh = 0x0A << 5;
+	sFilterConfig.FilterIdLow = 0x0000;
+	sFilterConfig.FilterMaskIdHigh = 0xFFFF << 5;
+	sFilterConfig.FilterMaskIdLow = 0x0000;
+	sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+	sFilterConfig.FilterActivation = ENABLE;
+	sFilterConfig.SlaveStartFilterBank = 14;
+
+	if (HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK) {
+		Error_Handler();
+	}
+	if (HAL_CAN_Start(&hcan1) != HAL_OK) {
+		Error_Handler();
+	}
+	if (HAL_CAN_ActivateNotification(&hcan1,
+			CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY) != HAL_OK) {
+		Error_Handler();
+	}
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -150,6 +175,9 @@ int main(void) {
 				//ERROR
 				Error_Handler();
 			}
+			while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac))
+				;
+
 			//	while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac));
 			send_CAN_flag = 0;
 		}
@@ -157,21 +185,21 @@ int main(void) {
 		if (send_CAN_20Hz_flag) {
 			HAL_GPIO_TogglePin(DIODE_0_GPIO_Port, DIODE_0_Pin);
 
-			int16_t val = ADC_MEANSURE_VALUE[1];
-			ac_data[0] = (int8_t) (val & 0x00FF);
-			ac_data[1] = (int8_t) (val >> 8);
+			uint32_t val = ADC_MEANSURE_VALUE[1];
+			ac_data[0] = (uint8_t) (val & 0x00FF);
+			ac_data[1] = (uint8_t) (val >> 8);
 
-			int16_t val_1 = ADC_MEANSURE_VALUE[2];
-			ac_data[2] = (int8_t) (val_1 & 0x00FF);
-			ac_data[3] = (int8_t) (val_1 >> 8);
+			uint32_t val_1 = ADC_MEANSURE_VALUE[2];
+			ac_data[2] = (uint8_t) (val_1 & 0x00FF);
+			ac_data[3] = (uint8_t) (val_1 >> 8);
 
-			int16_t val_2 = ADC_MEANSURE_VALUE[3];
-			ac_data[4] = (int8_t) (val_2 & 0x00FF);
-			ac_data[5] = (int8_t) (val_2 >> 8);
+			uint32_t val_2 = ADC_MEANSURE_VALUE[3];
+			ac_data[4] = (uint8_t) (val_2 & 0x00FF);
+			ac_data[5] = (uint8_t) (val_2 >> 8);
 
-			int16_t val_3 = ADC_MEANSURE_VALUE[4];
-			ac_data[6] = (int8_t) (val_3 & 0x00FF);
-			ac_data[7] = (int8_t) (val_3 >> 8);
+			uint32_t val_3 = ADC_MEANSURE_VALUE[4];
+			ac_data[6] = (uint8_t) (val_3 & 0x00FF);
+			ac_data[7] = (uint8_t) (val_3 >> 8);
 
 			//	int16_t val_4 = ADC_MEANSURE_VALUE[4];
 			//	ac_data[8] = (int8_t) (val_4 & 0x00FF);
@@ -181,6 +209,8 @@ int main(void) {
 				//ERROR
 				Error_Handler();
 			}
+			while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac))
+				;
 		}
 
 		if (timer2_it_flag) {
@@ -225,6 +255,7 @@ int main(void) {
 				cnt = 0;
 				c_count = 0;
 			}
+
 		}
 	}
 
@@ -277,7 +308,7 @@ void SystemClock_Config(void) {
 		Error_Handler();
 	}
 	PeriphClkInit.PeriphClockSelection =
-			RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_ADC;
+	RCC_PERIPHCLK_UART4 | RCC_PERIPHCLK_ADC;
 	PeriphClkInit.Uart4ClockSelection = RCC_UART4CLKSOURCE_PCLK1;
 	PeriphClkInit.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
 	PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_HSI;
