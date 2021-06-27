@@ -70,10 +70,14 @@ void Error_Handler(void);
 #define ADC_1_GPIO_Port GPIOC
 #define ADC_0_Pin GPIO_PIN_0
 #define ADC_0_GPIO_Port GPIOA
-#define D_INPUT_3_Pin GPIO_PIN_4
-#define D_INPUT_3_GPIO_Port GPIOC
+#define RTD_input_Pin GPIO_PIN_4
+#define RTD_input_GPIO_Port GPIOC
+#define RTD_input_EXTI_IRQn EXTI4_IRQn
 #define D_INPUT_2_Pin GPIO_PIN_5
 #define D_INPUT_2_GPIO_Port GPIOC
+#define BRK_input_Pin GPIO_PIN_2
+#define BRK_input_GPIO_Port GPIOB
+#define BRK_input_EXTI_IRQn EXTI2_IRQn
 #define D_OUTPUT_4_Pin GPIO_PIN_8
 #define D_OUTPUT_4_GPIO_Port GPIOA
 #define D_OUTPUT_3_Pin GPIO_PIN_9
@@ -82,8 +86,6 @@ void Error_Handler(void);
 #define D_OUTPUT_2_GPIO_Port GPIOA
 #define D_OUTPUT_1_Pin GPIO_PIN_11
 #define D_OUTPUT_1_GPIO_Port GPIOA
-#define D_OUTPUT_0_Pin GPIO_PIN_12
-#define D_OUTPUT_0_GPIO_Port GPIOA
 #define JUMPER_Pin GPIO_PIN_6
 #define JUMPER_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
