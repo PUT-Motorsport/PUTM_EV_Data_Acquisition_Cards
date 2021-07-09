@@ -186,7 +186,7 @@ int main(void)
 		//100Hz CAN
 		if (send_CAN_flag) {
 
-			if (RTD_flag) {
+			if (RTD_flag && ADC_MEANSURE_VALUE[4]>760) {
 				ac_data[0] |= 1 << 0;
 				RTD_flag = 0;
 			} else {
@@ -200,9 +200,11 @@ int main(void)
 			}
 
 			int16_t val_0 = ADC_MEANSURE_VALUE[0];
-			ac_data[2] = (int8_t) (val_0 & 0x00FF);
-			ac_data[3] = (int8_t) (val_0 >> 8);
-			ac_data[4] = 0;
+			ac_data[1] = (int8_t) (val_0 & 0x00FF);
+			ac_data[2] = (int8_t) (val_0 >> 8);
+			int16_t val_1 = Freq;
+			ac_data[3] = (int8_t) (val_1 & 0x00FF);
+			ac_data[4] = (int8_t)(val_1 >> 8);
 			ac_data[5] = 0;
 			ac_data[6] = 0;
 			int16_t val_2 = ADC_MEANSURE_VALUE[2];
@@ -220,6 +222,7 @@ int main(void)
 				;
 
 			//	while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac));
+			RTD_flag = 0;
 			send_CAN_flag = 0;
 		}
 
@@ -324,14 +327,12 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
-  RCC_OscInitStruct.MSIState = RCC_MSI_ON;
-  RCC_OscInitStruct.MSICalibrationValue = 0;
-  RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_MSI;
-  RCC_OscInitStruct.PLL.PLLM = 1;
-  RCC_OscInitStruct.PLL.PLLN = 36;
+  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_OscInitStruct.PLL.PLLM = 2;
+  RCC_OscInitStruct.PLL.PLLN = 18;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
   RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
   RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
@@ -355,9 +356,9 @@ void SystemClock_Config(void)
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_UART4|RCC_PERIPHCLK_ADC;
   PeriphClkInit.Uart4ClockSelection = RCC_UART4CLKSOURCE_PCLK1;
   PeriphClkInit.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
-  PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_MSI;
-  PeriphClkInit.PLLSAI1.PLLSAI1M = 1;
-  PeriphClkInit.PLLSAI1.PLLSAI1N = 16;
+  PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_HSE;
+  PeriphClkInit.PLLSAI1.PLLSAI1M = 2;
+  PeriphClkInit.PLLSAI1.PLLSAI1N = 8;
   PeriphClkInit.PLLSAI1.PLLSAI1P = RCC_PLLP_DIV2;
   PeriphClkInit.PLLSAI1.PLLSAI1Q = RCC_PLLQ_DIV2;
   PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV2;
@@ -480,10 +481,10 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 8;
+  hcan1.Init.Prescaler = 9;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_15TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_13TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_2TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
@@ -565,10 +566,10 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 0;
+  htim3.Init.Prescaler = 1000;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 65535;
-  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV2;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV4;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_IC_Init(&htim3) != HAL_OK)
   {
@@ -763,20 +764,14 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 			} else {
 				Error_Handler();
 			}
-			Freq = HAL_RCC_GetPCLK1Freq() / diff;
+			Freq = (HAL_RCC_GetPCLK1Freq() / diff)/1000;
 			speed_flag = 0;
 		}
 
 	}
 
 }
-uint32_t Wheel_Counter(void)
-{
-	uint32_t rps=0;
-	circuit = DIAMETER * 3.14;
-	rps = 150000000*3600/circuit;
 
-}
 /* USER CODE END 4 */
 
 /**
