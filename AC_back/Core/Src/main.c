@@ -55,16 +55,17 @@ UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
 
-CAN_FilterTypeDef sFilterConfig;
+CAN_RxHeaderTypeDef RxHeader_CAN1;
 CAN_TxHeaderTypeDef tx_header_ac;
+CAN_FilterTypeDef sFilterConfig;
 uint8_t send_CAN_flag;
 uint8_t send_CAN_20Hz_flag;
 uint8_t send_Usart_flag;
 uint8_t timer2_it_flag;
 uint32_t mail_can_ac;
 uint8_t ac_data[8] = { 0 };
+uint8_t flag = 0;
 
-CAN_RxHeaderTypeDef RxHeader_CAN1;
 uint8_t RxData_CAN1[8];
 
 uint8_t speed_flag = 0;
@@ -81,9 +82,11 @@ uint32_t diff_ch3 = 0;
 uint16_t timer_ch3_OVC = 0;
 uint32_t Freq_ch3 = 0;
 
+uint8_t brk_flag = 0;
+
 uint16_t c_count;			//count impulse from D_INPUT2_PIN
 uint16_t cnt = 0;					// count timer2
-uint8_t flag = 0;
+uint8_t flaggg = 0;
 uint16_t c_count_2;			//count impulse from D_INPUT3_PIN
 
 uint8_t flag_2 = 0;
@@ -105,7 +108,8 @@ static void MX_UART4_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
-
+void CAN_Tx_Header_Init(void);
+void CAN_filter_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -148,49 +152,82 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
+  HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
 	HAL_TIM_Base_Start_IT(&htim2);
 	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_3);
+	CAN_Tx_Header_Init();
+	CAN_filter_Init();
 
-	CAN_TxHeaderTypeDef tx_header_ac;
-	tx_header_ac.StdId = CARD_B_CAN_ID;
-	tx_header_ac.RTR = CAN_RTR_DATA;
-	tx_header_ac.IDE = CAN_ID_STD;
-	tx_header_ac.DLC = CARD_B_CAN_DLC;
-	tx_header_ac.TransmitGlobalTime = DISABLE;
-	mail_can_ac = 0;
-
-	sFilterConfig.FilterBank = 0;
-	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-	sFilterConfig.FilterIdHigh = 0x0A << 5;
-	sFilterConfig.FilterIdLow = 0x0000;
-	sFilterConfig.FilterMaskIdHigh = 0xFFFF << 5;
-	sFilterConfig.FilterMaskIdLow = 0x0000;
-	sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
-	sFilterConfig.FilterActivation = ENABLE;
-	sFilterConfig.SlaveStartFilterBank = 14;
-
-	if (HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK) {
-		Error_Handler();
-	}
-	if (HAL_CAN_Start(&hcan1) != HAL_OK) {
-		Error_Handler();
-	}
-	if (HAL_CAN_ActivateNotification(&hcan1,
-	CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY) != HAL_OK) {
-		Error_Handler();
-	}
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
+
+		if(brk_flag)
+		{
+			HAL_GPIO_WritePin(D_OUTPUT_3_GPIO_Port, D_OUTPUT_3_Pin, SET);
+		}
+		else
+		{
+			HAL_GPIO_WritePin(D_OUTPUT_3_GPIO_Port, D_OUTPUT_3_Pin, RESET);
+		}
+
+
+
+		if (send_CAN_flag) {
+
+			int16_t val_0 = Freq;
+			//	ac_data[1] = (int8_t) (val_0 & 0x00FF);
+			//ac_data[2] = (int8_t) (val_0 >> 8);
+			int16_t val_1 = Freq_ch3;
+			//ac_data[3] = (int8_t) (val_1 & 0x00FF);
+			//	ac_data[4] = (int8_t) (val_1 >> 8);
+			ac_data[0] = 0;
+
+
+			ac_data[5] = 0;
+			ac_data[6] = 0;
+			ac_data[7] = 0;
+
+			if (HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac, ac_data,
+					&mail_can_ac) != HAL_OK) {
+				error_can_status = HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac,
+						ac_data, &mail_can_ac);
+				//ERROR
+				Error_Handler();
+			}
+			while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac))
+				;
+			//	while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac));
+		}
+
+		if (send_CAN_20Hz_flag) {
+//
+		}
+
+		if (timer2_it_flag) {
+			timer2_it_flag = 0;
+			//cnt++;
+			send_CAN20Hz_cnt++;
+			send_CAN_cnt++;
+
+			if (send_CAN_cnt > 10) {
+				send_CAN_flag = 1;
+				send_CAN_cnt = 0;
+			}
+			if (send_CAN20Hz_cnt > 50) {
+				send_CAN_20Hz_flag = 1;
+				send_CAN20Hz_cnt = 0;
+			}
+		}
+		//HAL_GPIO_WritePin(D_OUTPUT_3_GPIO_Port, D_OUTPUT_3_Pin, SET);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		}
+	}
   /* USER CODE END 3 */
 }
 
@@ -367,10 +404,10 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 9;
+  hcan1.Init.Prescaler = 4;
   hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
-  hcan1.Init.TimeSeg1 = CAN_BS1_13TQ;
+  hcan1.Init.TimeSeg1 = CAN_BS1_15TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_2TQ;
   hcan1.Init.TimeTriggeredMode = DISABLE;
   hcan1.Init.AutoBusOff = DISABLE;
@@ -609,57 +646,89 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-	void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-		if (htim->Instance == TIM2) {
-			timer2_it_flag = 1;
-		}
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	if (htim->Instance == TIM2) {
+		timer2_it_flag = 1;
 	}
+}
 
-	void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 
-	}
+}
 
-	void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
-		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4) {
-			if (!speed_flag) {
-				timer_val_1 = HAL_TIM_ReadCapturedValue(&htim3, TIM_CHANNEL_4);
-				speed_flag = 1;
-			} else if (speed_flag) {
-				timer_val_2 = HAL_TIM_ReadCapturedValue(&htim3, TIM_CHANNEL_4);
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
+	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4) {
+		if (!speed_flag) {
+			timer_val_1 = HAL_TIM_ReadCapturedValue(&htim3, TIM_CHANNEL_4);
+			speed_flag = 1;
+		} else if (speed_flag) {
+			timer_val_2 = HAL_TIM_ReadCapturedValue(&htim3, TIM_CHANNEL_4);
 
-				if (timer_val_2 > timer_val_1) {
-					diff = timer_val_2 - timer_val_1;
-				} else if (timer_val_1 > timer_val_2) {
-					diff = ((0xffff - timer_val_1) + timer_val_2) + 1;
-				} else {
-					Error_Handler();
-				}
-				Freq = (HAL_RCC_GetPCLK1Freq() / diff) / 1000;
-				speed_flag = 0;
+			if (timer_val_2 > timer_val_1) {
+				diff = timer_val_2 - timer_val_1;
+			} else if (timer_val_1 > timer_val_2) {
+				diff = ((0xffff - timer_val_1) + timer_val_2) + 1;
+			} else {
+				Error_Handler();
 			}
-		}
-		if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3) {
-			if (!speed_flag_ch3) {
-				timer_ch3_val_1 = HAL_TIM_ReadCapturedValue(&htim3, 3);
-				speed_flag_ch3 = 1;
-			} else if (speed_flag_ch3) {
-				timer_ch3_val_2 = HAL_TIM_ReadCapturedValue(&htim3,
-				TIM_CHANNEL_3);
-
-				if (timer_ch3_val_2 > timer_ch3_val_1) {
-					diff_ch3 = timer_ch3_val_2 - timer_ch3_val_1;
-				} else if (timer_val_1 > timer_val_2) {
-					diff_ch3 = ((0xffff - timer_ch3_val_1) + timer_ch3_val_2)
-							+ 1;
-				} else {
-					Error_Handler();
-				}
-				Freq_ch3 = (HAL_RCC_GetPCLK1Freq() / diff_ch3) / 1000;
-				speed_flag_ch3 = 0;
-			}
+			Freq = (HAL_RCC_GetPCLK1Freq() / diff) / 2000;
+			speed_flag = 0;
 		}
 	}
+	if (htim->Channel == HAL_TIM_ACTIVE_CHANNEL_3) {
+		if (!speed_flag_ch3) {
+			timer_ch3_val_1 = HAL_TIM_ReadCapturedValue(&htim3, TIM_CHANNEL_3);
+			speed_flag_ch3 = 1;
+		} else if (speed_flag_ch3) {
+			timer_ch3_val_2 = HAL_TIM_ReadCapturedValue(&htim3,
+			TIM_CHANNEL_3);
 
+			if (timer_ch3_val_2 > timer_ch3_val_1) {
+				diff_ch3 = timer_ch3_val_2 - timer_ch3_val_1;
+			} else if (timer_ch3_val_1 > timer_ch3_val_2) {
+				diff_ch3 = ((0xffff - timer_ch3_val_1) + timer_ch3_val_2) + 1;
+			} else {
+				Error_Handler();
+			}
+			Freq_ch3 = (HAL_RCC_GetPCLK1Freq() / diff_ch3) / 2000;
+			speed_flag_ch3 = 0;
+		}
+	}
+}
+
+void CAN_filter_Init(void) {
+
+	sFilterConfig.FilterBank = 0;
+	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	sFilterConfig.FilterIdHigh = 0x0000;
+	sFilterConfig.FilterIdLow = 0x0000;
+	sFilterConfig.FilterMaskIdHigh = 0x0000;
+	sFilterConfig.FilterMaskIdLow = 0x0000;
+	sFilterConfig.FilterFIFOAssignment = CAN_RX_FIFO0;
+	sFilterConfig.FilterActivation = ENABLE;
+	sFilterConfig.SlaveStartFilterBank = 14;
+
+	if (HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig) != HAL_OK) {
+		Error_Handler();
+	}
+	if (HAL_CAN_Start(&hcan1) != HAL_OK) {
+		Error_Handler();
+	}
+	if (HAL_CAN_ActivateNotification(&hcan1,
+	CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY) != HAL_OK) {
+		Error_Handler();
+	}
+
+}
+
+void CAN_Tx_Header_Init(void) {
+	tx_header_ac.StdId = CARD_B_CAN_ID;
+	tx_header_ac.RTR = CAN_RTR_DATA;
+	tx_header_ac.IDE = CAN_ID_STD;
+	tx_header_ac.DLC = CARD_B_CAN_DLC;
+	tx_header_ac.TransmitGlobalTime = DISABLE;
+}
 
 /* USER CODE END 4 */
 
@@ -670,10 +739,10 @@ static void MX_GPIO_Init(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
-		/* User can add his own implementation to report the HAL error return state */
-		__disable_irq();
-		while (1) {
-		}
+	/* User can add his own implementation to report the HAL error return state */
+	__disable_irq();
+	while (1) {
+	}
   /* USER CODE END Error_Handler_Debug */
 }
 

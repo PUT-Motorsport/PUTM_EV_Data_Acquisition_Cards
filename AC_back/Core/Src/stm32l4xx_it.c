@@ -43,7 +43,8 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 extern CAN_HandleTypeDef hcan1;
-extern CAN_RxHeaderTypeDef RxHeader_CAN1;
+extern brk_flag;
+CAN_RxHeaderTypeDef RxHeader_CAN1;
 extern uint8_t RxData_CAN1[8];
 /* USER CODE END PV */
 
@@ -225,16 +226,19 @@ void DMA1_Channel1_IRQHandler(void)
 void CAN1_RX0_IRQHandler(void)
 {
   /* USER CODE BEGIN CAN1_RX0_IRQn 0 */
-	  if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader_CAN1, RxData_CAN1) == HAL_OK)
+
+
+	if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader_CAN1, RxData_CAN1) == HAL_OK)
 	  {
 		  if(RxHeader_CAN1.StdId == 0x0D)
 		  {
 			  int8_t break_light = RxData_CAN1[0];
-			  if(break_light == 3)
+			  if(break_light == 2 ||break_light == 3)
 			  {
-				  HAL_GPIO_WritePin(D_OUTPUT_1_GPIO_Port, D_OUTPUT_1_Pin, SET);
+				  brk_flag = 1;
+
 			  }else{
-				  HAL_GPIO_WritePin(D_OUTPUT_1_GPIO_Port, D_OUTPUT_1_Pin, RESET);
+				  brk_flag = 0;
 			  }
 		  }
 	  }
@@ -243,6 +247,20 @@ void CAN1_RX0_IRQHandler(void)
   /* USER CODE BEGIN CAN1_RX0_IRQn 1 */
 
   /* USER CODE END CAN1_RX0_IRQn 1 */
+}
+
+/**
+  * @brief This function handles CAN1 RX1 interrupt.
+  */
+void CAN1_RX1_IRQHandler(void)
+{
+  /* USER CODE BEGIN CAN1_RX1_IRQn 0 */
+
+  /* USER CODE END CAN1_RX1_IRQn 0 */
+  HAL_CAN_IRQHandler(&hcan1);
+  /* USER CODE BEGIN CAN1_RX1_IRQn 1 */
+
+  /* USER CODE END CAN1_RX1_IRQn 1 */
 }
 
 /**
