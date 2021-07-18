@@ -73,8 +73,6 @@ void Error_Handler(void);
 #define RTD_input_Pin GPIO_PIN_4
 #define RTD_input_GPIO_Port GPIOC
 #define RTD_input_EXTI_IRQn EXTI4_IRQn
-#define D_INPUT_2_Pin GPIO_PIN_5
-#define D_INPUT_2_GPIO_Port GPIOC
 #define BRK_input_Pin GPIO_PIN_2
 #define BRK_input_GPIO_Port GPIOB
 #define BRK_input_EXTI_IRQn EXTI2_IRQn
