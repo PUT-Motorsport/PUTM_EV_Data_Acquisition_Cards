@@ -32,9 +32,12 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define CARD_B_CAN_ID 0x0D
-#define CARD_B_CAN_DLC 8
-#define CLOCK_FREQ 72000000
+#define ADC_MEANSURE_VALUE_SIZE 	5
+#define CARD_B_CAN_ID 				0x0D
+#define CARD_B_CAN_DLC 				8
+#define CLOCK_FREQ 					72000000
+#define PRESSURE_TO_RTDS 			600					//HOW HARD YOU MUST PUSH BRAKE TO RUN LAUNCH CONTROL
+#define PRESSURE_OFFSET_BRK 		450					//HOW HARD YOU MUST PUSH BRAKE TO LIGHT THE BRAKE LIGHT
 
 /* USER CODE END PD */
 
@@ -55,7 +58,6 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
-#define ADC_MEANSURE_VALUE_SIZE 5
 uint16_t ADC_MEANSURE_VALUE[ADC_MEANSURE_VALUE_SIZE];
 
 CAN_FilterTypeDef sFilterConfig;
@@ -65,7 +67,6 @@ uint8_t send_CAN_20Hz_flag;
 uint32_t mail_can_ac;
 uint8_t ac_data[8] = { 0 };
 HAL_StatusTypeDef error_can_status;
-CAN_FilterTypeDef sFilterConfig;
 uint16_t send_CAN_cnt = 0;
 uint16_t send_CAN20Hz_cnt = 0;
 
@@ -107,7 +108,8 @@ static void MX_UART4_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
-
+static void CAN_Tx_Header_Init(void);
+static void CAN_filter_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -167,7 +169,8 @@ int main(void) {
 		//100Hz CAN
 		if (send_CAN_flag) {
 
-			if (RTD_flag && ADC_MEANSURE_VALUE[4] > 760) {
+			//check RTDS
+			if (RTD_flag && ADC_MEANSURE_VALUE[4] > PRESSURE_TO_RTDS) {//&& ADC_MEANSURE_VALUE[4] > 600
 				ac_data[0] |= 1 << 0;
 				RTD_flag = 0;
 			} else {
@@ -175,7 +178,7 @@ int main(void) {
 			}
 			if (BRK_flag) {
 				ac_data[0] |= 1 << 1;
-				BRK_flag = 0;
+
 			} else {
 				ac_data[0] &= ~(1 << 1);
 			}
@@ -202,6 +205,7 @@ int main(void) {
 			while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac))
 				;
 			RTD_flag = 0;
+			BRK_flag = 0;
 			send_CAN_flag = 0;
 
 		}
@@ -235,7 +239,7 @@ int main(void) {
 			 while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac))
 			 ;*/
 		}
-		if (ADC_MEANSURE_VALUE[4] > 450) {
+		if (ADC_MEANSURE_VALUE[4] > PRESSURE_OFFSET_BRK) {
 			BRK_flag = 1;
 		} else {
 			BRK_flag = 0;
@@ -736,7 +740,7 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 	}
 }
 
-void CAN_filter_Init(void) {
+static void CAN_filter_Init(void) {
 
 	sFilterConfig.FilterBank = 0;
 	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
@@ -762,7 +766,7 @@ void CAN_filter_Init(void) {
 
 }
 
-void CAN_Tx_Header_Init(void) {
+static void CAN_Tx_Header_Init(void) {
 	tx_header_ac.StdId = CARD_B_CAN_ID;
 	tx_header_ac.RTR = CAN_RTR_DATA;
 	tx_header_ac.IDE = CAN_ID_STD;
