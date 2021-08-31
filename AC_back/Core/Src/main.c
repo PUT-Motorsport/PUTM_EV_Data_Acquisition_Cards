@@ -91,8 +91,7 @@ uint16_t c_count_2;			//count impulse from D_INPUT3_PIN
 
 uint8_t flag_2 = 0;
 uint8_t data_send[18];
-uint16_t send_CAN_cnt = 0;
-uint16_t send_CAN20Hz_cnt = 0;
+
 
 HAL_StatusTypeDef error_can_status;
 CAN_FilterTypeDef sFilterConfig;
@@ -159,13 +158,15 @@ int main(void)
 	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_3);
 
-
+	uint16_t send_CAN_cnt_a = 0;
+	uint16_t send_CAN20Hz_cnt = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 	while (1) {
 
+		brk_flag = 0;
 		if(brk_flag)
 		{
 			HAL_GPIO_WritePin(D_OUTPUT_3_GPIO_Port, D_OUTPUT_3_Pin, SET);
@@ -202,6 +203,7 @@ int main(void)
 			while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac))
 				;
 			//	while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac));
+			send_CAN_flag = 0;
 		}
 
 		if (send_CAN_20Hz_flag) {
@@ -209,19 +211,22 @@ int main(void)
 		}
 
 		if (timer2_it_flag) {
-			timer2_it_flag = 0;
-			//cnt++;
-			send_CAN20Hz_cnt++;
-			send_CAN_cnt++;
 
-			if (send_CAN_cnt > 10) {
+			//cnt++;
+
+
+			send_CAN_cnt_a++;
+			send_CAN20Hz_cnt++;
+
+			if (send_CAN_cnt_a > 10) {
 				send_CAN_flag = 1;
-				send_CAN_cnt = 0;
+				send_CAN_cnt_a = 0;
 			}
 			if (send_CAN20Hz_cnt > 50) {
 				send_CAN_20Hz_flag = 1;
 				send_CAN20Hz_cnt = 0;
 			}
+			timer2_it_flag = 0;
 		}
 		//HAL_GPIO_WritePin(D_OUTPUT_3_GPIO_Port, D_OUTPUT_3_Pin, SET);
     /* USER CODE END WHILE */
@@ -444,9 +449,9 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 10;
+  htim2.Init.Prescaler = 42;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 1599;
+  htim2.Init.Period = 7200;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
