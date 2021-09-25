@@ -36,9 +36,10 @@
 #define CARD_B_CAN_ID 				0x0D
 #define CARD_B_CAN_DLC 				8
 #define CLOCK_FREQ 					72000000
-#define PRESSURE_TO_RTDS 			0					//HOW HARD YOU MUST PUSH BRAKE TO RUN LAUNCH CONTROL
-#define PRESSURE_OFFSET_BRK 		450					//HOW HARD YOU MUST PUSH BRAKE TO LIGHT THE BRAKE LIGHT
-
+#define PRESSURE_TO_RTDS 	 		620					//HOW HARD YOU MUST PUSH BRAKE TO RUN LAUNCH CONTROL
+#define PRESSURE_OFFSET_BRK 		600					//HOW HARD YOU MUST PUSH BRAKE TO LIGHT THE BRAKE LIGHT
+#define CARD_A_CAN_ID 				0x0F
+#define CARD_A_DLC					6
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -62,10 +63,12 @@ uint16_t ADC_MEANSURE_VALUE[ADC_MEANSURE_VALUE_SIZE];
 
 CAN_FilterTypeDef sFilterConfig;
 CAN_TxHeaderTypeDef tx_header_ac;
+CAN_TxHeaderTypeDef tx_header_ac2;
 uint8_t send_CAN_flag;
 uint8_t send_CAN_20Hz_flag;
-uint32_t mail_can_ac;
+
 uint8_t ac_data[8] = { 0 };
+uint8_t ac_data2[6] = { 0 };
 HAL_StatusTypeDef error_can_status;
 uint16_t send_CAN_cnt = 0;
 uint16_t send_CAN20Hz_cnt = 0;
@@ -85,8 +88,9 @@ uint8_t speed_flag_ch3 = 0;
 uint32_t timer_ch3_val_1 = 0;
 uint32_t timer_ch3_val_2 = 0;
 uint32_t diff_ch3 = 0;
-uint32_t timer_ch3_OVC = 0;
+uint16_t timer_ch3_OVC = 0;
 uint32_t Freq_ch3 = 0;
+
 uint8_t data_send[18];
 
 uint16_t c_count;			//count impulse from D_INPUT2_PIN
@@ -108,8 +112,8 @@ static void MX_UART4_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
-static void CAN_Tx_Header_Init(void);
-static void CAN_filter_Init(void);
+//static void CAN_Tx_Header_Init(void);
+//static void CAN_filter_Init(void);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -146,19 +150,19 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
-  MX_CAN1_Init();
+ // MX_CAN1_Init();
   MX_ADC1_Init();
   MX_UART4_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-	HAL_ADC_Start_DMA(&hadc1, ADC_MEANSURE_VALUE, ADC_MEANSURE_VALUE_SIZE);
+	HAL_ADC_Start_DMA(&hadc1, (uint32_t*)ADC_MEANSURE_VALUE, ADC_MEANSURE_VALUE_SIZE);
 	HAL_TIM_Base_Start_IT(&htim2);
 
 	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_4);
 	HAL_TIM_IC_Start_IT(&htim3, TIM_CHANNEL_3);
-	CAN_Tx_Header_Init();
-	CAN_filter_Init();
+	//CAN_Tx_Header_Init();
+	//CAN_filter_Init();
 
   /* USER CODE END 2 */
 
@@ -170,7 +174,7 @@ int main(void)
 		if (send_CAN_flag) {
 
 			//check RTDS
-			if (RTD_flag && ADC_MEANSURE_VALUE[3] >= PRESSURE_TO_RTDS) {//&& ADC_MEANSURE_VALUE[4] > 600
+			if (RTD_flag && ADC_MEANSURE_VALUE[4] >= PRESSURE_TO_RTDS) {//&& ADC_MEANSURE_VALUE[4] > 600
 				ac_data[0] |= 1 << 0;
 				RTD_flag = 0;
 			} else {
@@ -183,28 +187,28 @@ int main(void)
 				ac_data[0] &= ~(1 << 1);
 			}
 
-			int16_t val_0 = ADC_MEANSURE_VALUE[0];
+			int16_t val_0 = Freq_ch3;
 			ac_data[1] = (int8_t) (val_0 & 0x00FF);
 			ac_data[2] = (int8_t) (val_0 >> 8);
 			int16_t val_1 = Freq;
 			ac_data[3] = (int8_t) (val_1 & 0x00FF);
 			ac_data[4] = (int8_t) (val_1 >> 8);
-			int16_t val_2 = Freq_ch3;
+			int16_t val_2 = ADC_MEANSURE_VALUE[0];
 			ac_data[5] = (int8_t) (val_2 & 0x00FF);
 			ac_data[6] = (int8_t) (val_2 >> 8);
+			int16_t val_3 = ADC_MEANSURE_VALUE[1];
+			ac_data[7] = (int8_t) (val_3 & 0x00FF);
 
-			ac_data[7] = 0;
-
-			if (HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac, ac_data,
-					&mail_can_ac) != HAL_OK) {
-				error_can_status = HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac,
-						ac_data, &mail_can_ac);
+			uint32_t mail_can_ac = 0;
+	/*		if (HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac, ac_data,&mail_can_ac) != HAL_OK) {
+				error_can_status = HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac, ac_data, &mail_can_ac);
 				//ERROR
 				Error_Handler();
 			}
-			while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac))
-				;
-			RTD_flag = 0;
+
+			while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac));
+*/
+
 			BRK_flag = 0;
 			send_CAN_flag = 0;
 
@@ -212,37 +216,37 @@ int main(void)
 
 		if (send_CAN_20Hz_flag) {
 
-//			uint32_t val = ADC_MEANSURE_VALUE[1];
-//			ac_data[0] = (uint8_t) (val & 0x00FF);
-//			ac_data[1] = (uint8_t) (val >> 8);
+			//			uint32_t val = ADC_MEANSURE_VALUE[1];
+			//			ac_data[0] = (uint8_t) (val & 0x00FF);
+			//			ac_data[1] = (uint8_t) (val >> 8);
 
-			uint32_t val_1 = ADC_MEANSURE_VALUE[2];
-			ac_data[2] = (uint8_t) (val_1 & 0x00FF);
-			ac_data[3] = (uint8_t) (val_1 >> 8);
+			int16_t val_1 = ADC_MEANSURE_VALUE[2];
+			ac_data2[0] = (uint8_t) (val_1 & 0x00FF);
+			ac_data[1] = (uint8_t) (val_1 >> 8);
 
-			uint32_t val_2 = ADC_MEANSURE_VALUE[3];
-			ac_data[4] = (uint8_t) (val_2 & 0x00FF);
-			ac_data[5] = (uint8_t) (val_2 >> 8);
+			int16_t val_2 = ADC_MEANSURE_VALUE[3];
+			ac_data[2] = (uint8_t) (val_2 & 0x00FF);
+			ac_data[3] = (uint8_t) (val_2 >> 8);
 
-			uint32_t val_3 = ADC_MEANSURE_VALUE[4];
-			ac_data[6] = (uint8_t) (val_3 & 0x00FF);
-			ac_data[7] = (uint8_t) (val_3 >> 8);
-
-			//	int16_t val_4 = ADC_MEANSURE_VALUE[4];
-			//	ac_data[8] = (int8_t) (val_4 & 0x00FF);
-			//	ac_data[9] = (int8_t) (val_4 >> 8);
-			/*		if (HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac, ac_data,
-			 &mail_can_ac) != HAL_OK) {
-			 //ERROR
-			 Error_Handler();
-			 }
-			 while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac))
-			 ;*/
+			int16_t val_3 = ADC_MEANSURE_VALUE[4];
+			ac_data[4] = (uint8_t) (val_3 & 0x00FF);
+			ac_data[5] = (uint8_t) (val_3 >> 8);
+			uint32_t mail_can_ac2 = 0;
+	/*		if (HAL_CAN_AddTxMessage(&hcan1, &tx_header_ac2, ac_data2,
+					&mail_can_ac2) != HAL_OK) {
+				//ERROR
+				Error_Handler();
+			}
+			while (HAL_CAN_IsTxMessagePending(&hcan1, mail_can_ac2))
+				;
+		*/	send_CAN_20Hz_flag = 0;
 		}
 		if (ADC_MEANSURE_VALUE[4] > PRESSURE_OFFSET_BRK) {
 			BRK_flag = 1;
+			HAL_GPIO_WritePin(D_OUTPUT_4_GPIO_Port, D_OUTPUT_4_Pin, SET);
 		} else {
 			BRK_flag = 0;
+			HAL_GPIO_WritePin(D_OUTPUT_4_GPIO_Port, D_OUTPUT_4_Pin, RESET);
 		}
 
 		if (timer2_it_flag) {
@@ -350,14 +354,14 @@ static void MX_ADC1_Init(void)
   /** Common config
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV2;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV10;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
-  hadc1.Init.NbrOfConversion = 5;
+  hadc1.Init.NbrOfConversion = 6;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
@@ -415,6 +419,14 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_5;
   sConfig.Rank = ADC_REGULAR_RANK_5;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_6;
+  sConfig.Rank = ADC_REGULAR_RANK_6;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -737,11 +749,11 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) {
 
 		if (!speed_flag_ch3) {
 			timer_ch3_val_1 = HAL_TIM_ReadCapturedValue(&htim3,
-			TIM_CHANNEL_3);
+					TIM_CHANNEL_3);
 			speed_flag_ch3 = 1;
 		} else if (speed_flag_ch3) {
 			timer_ch3_val_2 = HAL_TIM_ReadCapturedValue(&htim3,
-			TIM_CHANNEL_3);
+					TIM_CHANNEL_3);
 
 			if (timer_ch3_val_2 > timer_ch3_val_1) {
 				diff_ch3 = timer_ch3_val_2 - timer_ch3_val_1;
@@ -783,10 +795,10 @@ static void CAN_filter_Init(void) {
 	if (HAL_CAN_Start(&hcan1) != HAL_OK) {
 		Error_Handler();
 	}
-	if (HAL_CAN_ActivateNotification(&hcan1,
-	CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY) != HAL_OK) {
-		Error_Handler();
-	}
+//	if (HAL_CAN_ActivateNotification(&hcan1,
+//			CAN_IT_RX_FIFO0_MSG_PENDING | CAN_IT_TX_MAILBOX_EMPTY) != HAL_OK) {
+//		Error_Handler();
+//	}
 
 }
 
@@ -796,6 +808,12 @@ static void CAN_Tx_Header_Init(void) {
 	tx_header_ac.IDE = CAN_ID_STD;
 	tx_header_ac.DLC = CARD_B_CAN_DLC;
 	tx_header_ac.TransmitGlobalTime = DISABLE;
+
+	tx_header_ac2.StdId = CARD_A_CAN_ID;
+	tx_header_ac2.RTR = CAN_RTR_DATA;
+	tx_header_ac2.IDE = CAN_ID_STD;
+	tx_header_ac2.DLC = CARD_A_DLC;
+	tx_header_ac2.TransmitGlobalTime = DISABLE;
 }
 
 /* USER CODE END 4 */
@@ -827,7 +845,7 @@ void Error_Handler(void)
 void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
-  /* User can add his own implementation to report the file name and line number,
+	/* User can add his own implementation to report the file name and line number,
      ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
   /* USER CODE END 6 */
 }
